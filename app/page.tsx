@@ -1,7 +1,7 @@
 
 'use client';
 import React, { useState } from 'react';
-import ClimbingWall from './components/climbingWall'; // 确保路径正确
+import ClimbingWall from './components/ClimbingWall'; // 确保路径正确
 
 const Home: React.FC = () => {
   const [inputHeight, setInputHeight] = useState<number>(0);
