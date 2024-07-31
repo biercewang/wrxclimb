@@ -5,17 +5,17 @@ import ClimbingWall from './components/ClimbingWall'; // 确保路径正确
 import RockWallPoints from './components/RockWallPoints'; // 引入新的组件
 
 const Home: React.FC = () => {
-  const [inputHeight, setInputHeight] = useState<number>(1200);
-  const [inputWidth, setInputWidth] = useState<number>(200);
-  const [marginTop, setMarginTop] = useState<number>(20);
-  const [marginBottom, setMarginBottom] = useState<number>(20);
-  const [marginLeft, setMarginLeft] = useState<number>(20);
-  const [marginRight, setMarginRight] = useState<number>(20);
-  const [pointSpacing, setPointSpacing] = useState<number>(15);
-  const [horizontalBlankAfter, setHorizontalBlankAfter] = useState<number>(5);
-  const [verticalBlankAfter, setVerticalBlankAfter] = useState<number>(5);
-  const [horizontalBlankLength, setHorizontalBlankLength] = useState<number>(10);  // 新增横向空白长度，单位为厘米
-  const [verticalBlankLength, setVerticalBlankLength] = useState<number>(10);    // 新增纵向空白长度，单位为厘米
+  const [inputHeight, setInputHeight] = useState<number>(12000); // 1200mm -> 12000mm
+  const [inputWidth, setInputWidth] = useState<number>(2000); // 200mm -> 2000mm
+  const [marginTop, setMarginTop] = useState<number>(185); // 20mm -> 200mm
+  const [marginBottom, setMarginBottom] = useState<number>(185); // 20mm -> 200mm
+  const [marginLeft, setMarginLeft] = useState<number>(125); // 20mm -> 200mm
+  const [marginRight, setMarginRight] = useState<number>(125); // 20mm -> 200mm
+  const [pointSpacing, setPointSpacing] = useState<number>(125); // 15mm -> 150mm
+  const [horizontalBlankAfter, setHorizontalBlankAfter] = useState<number>(11);
+  const [verticalBlankAfter, setVerticalBlankAfter] = useState<number>(10);
+  const [horizontalBlankLength, setHorizontalBlankLength] = useState<number>(250); // 100mm -> 1000mm
+  const [verticalBlankLength, setVerticalBlankLength] = useState<number>(370); // 100mm -> 1000mm
   const [showWall, setShowWall] = useState<boolean>(false);
 
   const handleGenerateWall = () => {
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
       <div className="flex-grow flex justify-center items-start p-4 overflow-auto">
         <div className="space-y-2 mr-4">
           <label className="block">
-            Wall Width (cm):
+            Wall Width (mm):
             <input
               type="number"
               value={inputWidth}
@@ -39,7 +39,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Wall Height (cm):
+            Wall Height (mm):
             <input
               type="number"
               value={inputHeight}
@@ -48,7 +48,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Edge Margin Top (cm):
+            Edge Margin Top (mm):
             <input
               type="number"
               value={marginTop}
@@ -57,7 +57,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Edge Margin Bottom (cm):
+            Edge Margin Bottom (mm):
             <input
               type="number"
               value={marginBottom}
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Edge Margin Left (cm):
+            Edge Margin Left (mm):
             <input
               type="number"
               value={marginLeft}
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Edge Margin Right (cm):
+            Edge Margin Right (mm):
             <input
               type="number"
               value={marginRight}
@@ -84,7 +84,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Point Spacing (cm):
+            Point Spacing (mm):
             <input
               type="number"
               value={pointSpacing}
@@ -111,7 +111,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Horizontal Blank Length (cm):
+            Horizontal Blank Length (mm):
             <input
               type="number"
               value={horizontalBlankLength}
@@ -120,7 +120,7 @@ const Home: React.FC = () => {
             />
           </label>
           <label className="block">
-            Vertical Blank Length (cm):
+            Vertical Blank Length (mm):
             <input
               type="number"
               value={verticalBlankLength}
@@ -137,10 +137,10 @@ const Home: React.FC = () => {
         </div>
         {showWall && inputWidth > 0 && inputHeight > 0 && (
           <div className="relative" style={{ width: `${inputWidth}px`, height: `${inputHeight}px` }}>
-            <ClimbingWall widthCm={inputWidth} heightCm={inputHeight} />
+            <ClimbingWall widthmm={inputWidth} heightmm={inputHeight} />
             <RockWallPoints
-              widthCm={inputWidth}
-              heightCm={inputHeight}
+              widthmm={inputWidth}
+              heightmm={inputHeight}
               marginTop={marginTop}
               marginBottom={marginBottom}
               marginLeft={marginLeft}

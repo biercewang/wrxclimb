@@ -2,20 +2,20 @@
 import React from 'react';
 
 interface ClimbingWallProps {
-  widthCm: number;
-  heightCm: number;
+  widthmm: number;
+  heightmm: number;
 }
 
-const ClimbingWall: React.FC<ClimbingWallProps> = ({ widthCm, heightCm }) => {
+const ClimbingWall: React.FC<ClimbingWallProps> = ({ widthmm, heightmm }) => {
   return (
     <div style={{
       position: 'relative', // 设置相对定位
-      width: `${widthCm}px`, 
-      height: `${heightCm}px`, 
+      width: `${widthmm}px`, 
+      height: `${heightmm}px`, 
       backgroundColor: 'lightgray', 
       border: '1px solid black'
     }}>
-      Climbing Wall: {widthCm / 100}m x {heightCm / 100}m
+      Climbing Wall: {widthmm / 100}m x {heightmm / 100}m
     </div>
   );
 };

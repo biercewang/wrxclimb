@@ -1,8 +1,8 @@
 // RockWallPoints.tsx
 import React from 'react';
 interface RockWallPointsProps {
-  heightCm: number;
-  widthCm: number;
+  heightmm: number;
+  widthmm: number;
   marginTop: number;
   marginBottom: number;
   marginLeft: number;
@@ -28,8 +28,8 @@ const defaultProps: Partial<RockWallPointsProps> = {
 };
 
 const RockWallPoints: React.FC<RockWallPointsProps> = ({
-  heightCm,
-  widthCm,
+  heightmm,
+  widthmm,
   marginTop,
   marginBottom,
   marginLeft,
@@ -40,8 +40,8 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
   horizontalBlankLength,
   verticalBlankLength
 }) => {
-  const rows = Math.floor((heightCm - marginTop - marginBottom) / pointSpacing);
-  const columns = Math.floor((widthCm - marginLeft - marginRight) / pointSpacing);
+  const rows = Math.floor((heightmm - marginTop - marginBottom) / pointSpacing);
+  const columns = Math.floor((widthmm - marginLeft - marginRight) / pointSpacing);
 
   return (
     <div style={{ position: 'absolute', top: `${marginTop}px`, left: `${marginLeft}px` }}>
