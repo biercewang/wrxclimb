@@ -6,11 +6,11 @@ import RockWallPoints from './components/RockWallPoints'; // 引入新的组件
 
 const Home: React.FC = () => {
   const [inputHeight, setInputHeight] = useState<number>(12000); // 1200mm -> 12000mm
-  const [inputWidth, setInputWidth] = useState<number>(2000); // 200mm -> 2000mm
-  const [marginTop, setMarginTop] = useState<number>(185); // 20mm -> 200mm
+  const [inputWidth, setInputWidth] = useState<number>(3000); // 200mm -> 2000mm
+  const [marginTop, setMarginTop] = useState<number>(0); // 20mm -> 200mm
   const [marginBottom, setMarginBottom] = useState<number>(185); // 20mm -> 200mm
   const [marginLeft, setMarginLeft] = useState<number>(125); // 20mm -> 200mm
-  const [marginRight, setMarginRight] = useState<number>(125); // 20mm -> 200mm
+  const [marginRight, setMarginRight] = useState<number>(0); // 20mm -> 200mm
   const [pointSpacing, setPointSpacing] = useState<number>(125); // 15mm -> 150mm
   const [horizontalBlankAfter, setHorizontalBlankAfter] = useState<number>(11);
   const [verticalBlankAfter, setVerticalBlankAfter] = useState<number>(10);
