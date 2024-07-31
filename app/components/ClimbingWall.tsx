@@ -1,16 +1,20 @@
+// ClimbingWall.tsx
 import React from 'react';
 
 interface ClimbingWallProps {
-  heightCm: number;
   widthCm: number;
+  heightCm: number;
 }
 
-const ClimbingWall: React.FC<ClimbingWallProps> = ({ heightCm, widthCm }) => {
-  const widthVw = 50;
-  const heightVw = (heightCm / widthCm) * widthVw;
-
+const ClimbingWall: React.FC<ClimbingWallProps> = ({ widthCm, heightCm }) => {
   return (
-    <div className="relative w-full max-w-[50vw] bg-gray-300 border border-black" style={{ height: `${heightVw}vw` }}>
+    <div style={{
+      position: 'relative', // 设置相对定位
+      width: `${widthCm}px`, 
+      height: `${heightCm}px`, 
+      backgroundColor: 'lightgray', 
+      border: '1px solid black'
+    }}>
       Climbing Wall: {widthCm / 100}m x {heightCm / 100}m
     </div>
   );
