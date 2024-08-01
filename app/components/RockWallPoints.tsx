@@ -1,3 +1,4 @@
+// RockWallPoints.tsx
 import React from 'react';
 
 interface RockWallPointsProps {
@@ -12,6 +13,7 @@ interface RockWallPointsProps {
   verticalBlankAfter: number;
   horizontalBlankLength: number;
   verticalBlankLength: number;
+  highlightedLabels: string[]; // 新增属性
 }
 
 const RockWallPoints: React.FC<RockWallPointsProps> = ({
@@ -25,7 +27,8 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
   horizontalBlankAfter,
   verticalBlankAfter,
   horizontalBlankLength,
-  verticalBlankLength
+  verticalBlankLength,
+  highlightedLabels // 接收新属性
 }) => {
   const points = [];
   const columnsSequence = 'ABCDEFGHILM'.split('');
@@ -72,26 +75,30 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
 
   return (
     <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
-      {points.map((point, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${point.x}px`,
-            bottom: `${point.y}px`,
-            width: '10px',
-            height: '10px',
-            backgroundColor: 'black',
-            color: 'white',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            fontSize: '20px'
-          }}
-        >
-          {point.label}
-        </div>
-      ))}
+      {points.map((point, index) => {
+        const isHighlighted = highlightedLabels.includes(point.label);
+        const size = isHighlighted ? '100px' : '10px'; // 点的尺寸
+        const offset = isHighlighted ? 45 : 0; // 根据是否高亮来设置偏移量
+        const style: React.CSSProperties = {
+          position: 'absolute',
+          left: `${point.x - offset}px`, // 调整位置以使点以中心为放大点
+          bottom: `${point.y - offset}px`, // 调整位置以使点以中心为放大点
+          width: size,
+          height: size,
+          backgroundColor: isHighlighted ? 'red' : 'black',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontSize: '20px'
+        };
+
+        return (
+          <div key={index} style={style}>
+            {point.label}
+          </div>
+        );
+      })}
     </div>
   );
 };

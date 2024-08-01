@@ -1,4 +1,4 @@
-
+// pages.tsx
 'use client';
 import React, { useState } from 'react';
 import ClimbingWall from './components/ClimbingWall'; // 确保路径正确
@@ -18,8 +18,27 @@ const Home: React.FC = () => {
   const [verticalBlankLength, setVerticalBlankLength] = useState<number>(245); // 100mm -> 1000mm
   const [showWall, setShowWall] = useState<boolean>(false);
 
+  const defaultHighlightedLabels = [
+    "R8B1", "R8E5", "R7E9", "R7A6", "R7D5", "R7G1", "R6E9", "R6H6",
+    "R6B5", "R6A1", "R6E1", "R5A8", "R5C6", "L5I5", "L5L1", "R5A1",
+    "L4H8", "R4C8", "R4C6", "L4M4", "R4G2", "R3C10", "R3E7", "R3E5",
+    "R3A2", "L2I10", "R2D9", "L2M5", "L2I1", "L1M9", "L1H8", "L1H5", "L1M2","R8A10"
+  ];
+
+  const [highlightedLabels, setHighlightedLabels] = useState<string[]>(defaultHighlightedLabels);
+  const [labelsInput, setLabelsInput] = useState<string>(defaultHighlightedLabels.join('; '));
+
   const handleGenerateWall = () => {
     setShowWall(true); // 显示岩壁和点
+};
+
+  const handleLabelsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLabelsInput(event.target.value);
+  };
+
+  const handleApplyLabels = () => {
+    const labelsArray = labelsInput.split(';').map(label => label.trim()).filter(label => label !== '');
+    setHighlightedLabels(labelsArray);
   };
 
   return (
@@ -134,6 +153,22 @@ const Home: React.FC = () => {
           >
             Generate Wall
           </button>
+          <label className="block">
+            Highlight Labels (use ';' to separate):
+            <input
+              type="text"
+              value={labelsInput}
+              className="mt-1 p-1 border rounded w-full"
+              onChange={handleLabelsChange}
+            />
+          </label>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
+            onClick={handleApplyLabels}
+          >
+            Apply Highlight
+          </button>
+
         </div>
         {showWall && inputWidth > 0 && inputHeight > 0 && (
           <div className="relative" style={{ width: `${inputWidth}px`, height: `${inputHeight}px` }}>
@@ -150,6 +185,7 @@ const Home: React.FC = () => {
               verticalBlankAfter={verticalBlankAfter}
               horizontalBlankLength={horizontalBlankLength}
               verticalBlankLength={verticalBlankLength}
+              highlightedLabels={highlightedLabels} 
             />
           </div>
         )}
