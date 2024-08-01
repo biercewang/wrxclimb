@@ -14,8 +14,8 @@ const Home: React.FC = () => {
   const [pointSpacing, setPointSpacing] = useState<number>(125); // 15mm -> 150mm
   const [horizontalBlankAfter, setHorizontalBlankAfter] = useState<number>(11);
   const [verticalBlankAfter, setVerticalBlankAfter] = useState<number>(10);
-  const [horizontalBlankLength, setHorizontalBlankLength] = useState<number>(250); // 100mm -> 1000mm
-  const [verticalBlankLength, setVerticalBlankLength] = useState<number>(370); // 100mm -> 1000mm
+  const [horizontalBlankLength, setHorizontalBlankLength] = useState<number>(125); // 100mm -> 1000mm
+  const [verticalBlankLength, setVerticalBlankLength] = useState<number>(245); // 100mm -> 1000mm
   const [showWall, setShowWall] = useState<boolean>(false);
 
   const handleGenerateWall = () => {
