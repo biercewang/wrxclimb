@@ -56,8 +56,23 @@ const Home: React.FC = () => {
     setTouchTime(event.target.value);
   };
 
-  const handleTimeSubmit = () => {
-    console.log(`Time for ${selectedPoint}: ${touchTime} seconds`);  // You can replace this with logic to send data to a server
+  const handleTimeSubmit = async () => {
+    try {
+      const response = await fetch('/api/point-times', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ pointLabel: selectedPoint, timeInSeconds: parseFloat(touchTime) })
+      });
+      if (response.ok) {
+        console.log("Time saved successfully");
+      } else {
+        throw new Error('Failed to save time');
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
