@@ -22,7 +22,7 @@ const Home: React.FC = () => {
     "R8B1", "R8E5", "R7E9", "R7A6", "R7D5", "R7G1", "R6E9", "R6H6",
     "R6B5", "R6A1", "R6E1", "R5A8", "R5C6", "L5I5", "L5L1", "R5A1",
     "L4H8", "R4C8", "R4C6", "L4M4", "R4G2", "R3C10", "R3E7", "R3E5",
-    "R3A2", "L2I10", "R2D9", "L2M5", "L2I1", "L1M9", "L1H8", "L1H5", "L1M2","R8A10"
+    "R3A2", "L2I10", "R2D9", "L2M5", "L2I1", "L1M9", "L1H8", "L1H5", "L1M2", "R8A10"
   ];
 
   const [highlightedLabels, setHighlightedLabels] = useState<string[]>(defaultHighlightedLabels);
@@ -30,7 +30,9 @@ const Home: React.FC = () => {
 
   const handleGenerateWall = () => {
     setShowWall(true); // 显示岩壁和点
-};
+  };
+
+
 
   const handleLabelsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLabelsInput(event.target.value);
@@ -39,6 +41,23 @@ const Home: React.FC = () => {
   const handleApplyLabels = () => {
     const labelsArray = labelsInput.split(';').map(label => label.trim()).filter(label => label !== '');
     setHighlightedLabels(labelsArray);
+  };
+
+  // 点击逻辑
+  const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
+  const [touchTime, setTouchTime] = useState<string>('');
+
+  const handlePointClick = (label: string) => {
+    setSelectedPoint(label);
+    setTouchTime('');  // Reset previous time when a new point is clicked
+  };
+
+  const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTouchTime(event.target.value);
+  };
+
+  const handleTimeSubmit = () => {
+    console.log(`Time for ${selectedPoint}: ${touchTime} seconds`);  // You can replace this with logic to send data to a server
   };
 
   return (
@@ -171,24 +190,46 @@ const Home: React.FC = () => {
 
         </div>
         {showWall && inputWidth > 0 && inputHeight > 0 && (
-          <div className="relative" style={{ width: `${inputWidth}px`, height: `${inputHeight}px` }}>
-            <ClimbingWall widthmm={inputWidth} heightmm={inputHeight} />
-            <RockWallPoints
-              widthmm={inputWidth}
-              heightmm={inputHeight}
-              marginTop={marginTop}
-              marginBottom={marginBottom}
-              marginLeft={marginLeft}
-              marginRight={marginRight}
-              pointSpacing={pointSpacing}
-              horizontalBlankAfter={horizontalBlankAfter}
-              verticalBlankAfter={verticalBlankAfter}
-              horizontalBlankLength={horizontalBlankLength}
-              verticalBlankLength={verticalBlankLength}
-              highlightedLabels={highlightedLabels} 
-            />
+          <div className="flex">
+            <div className="relative" style={{ width: `${inputWidth}px`, height: `${inputHeight}px` }}>
+              <ClimbingWall widthmm={inputWidth} heightmm={inputHeight} />
+              <RockWallPoints
+                widthmm={inputWidth}
+                heightmm={inputHeight}
+                marginTop={marginTop}
+                marginBottom={marginBottom}
+                marginLeft={marginLeft}
+                marginRight={marginRight}
+                pointSpacing={pointSpacing}
+                horizontalBlankAfter={horizontalBlankAfter}
+                verticalBlankAfter={verticalBlankAfter}
+                horizontalBlankLength={horizontalBlankLength}
+                verticalBlankLength={verticalBlankLength}
+                highlightedLabels={defaultHighlightedLabels}
+                onPointClick={handlePointClick}
+              />
+            </div>
+            {selectedPoint && (
+              <div className="ml-4 p-4 border rounded bg-white shadow">
+                <h3>Selected Point: {selectedPoint}</h3>
+                <input
+                  type="text"
+                  value={touchTime}
+                  onChange={handleTimeChange}
+                  placeholder="Enter time (sec)"
+                  className="border p-1 rounded w-full"
+                />
+                <button
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={handleTimeSubmit}
+                >
+                  Submit Time
+                </button>
+              </div>
+            )}
           </div>
         )}
+
       </div>
       <footer className="bg-gray-200 text-center p-2">
         © 2024 Climbing Wall Simulator. All rights reserved.

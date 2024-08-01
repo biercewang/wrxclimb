@@ -14,6 +14,7 @@ interface RockWallPointsProps {
   horizontalBlankLength: number;
   verticalBlankLength: number;
   highlightedLabels: string[]; // 新增属性
+  onPointClick: (label: string) => void;
 }
 
 const RockWallPoints: React.FC<RockWallPointsProps> = ({
@@ -28,7 +29,9 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
   verticalBlankAfter,
   horizontalBlankLength,
   verticalBlankLength,
-  highlightedLabels // 接收新属性
+  highlightedLabels, // 接收新属性
+  onPointClick 
+
 }) => {
   const points = [];
   const columnsSequence = 'ABCDEFGHILM'.split('');
@@ -94,7 +97,11 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
         };
 
         return (
-          <div key={index} style={style}>
+          <div 
+          key={index} 
+          style={style}
+          onClick={() => onPointClick(point.label)}  // 添加点击事件
+          >
             {point.label}
           </div>
         );
