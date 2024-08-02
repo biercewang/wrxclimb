@@ -93,15 +93,12 @@ const RockWallPoints: React.FC<RockWallPointsProps> = ({
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          fontSize: '20px'
+          fontSize: '20px',
+          cursor: isHighlighted ? 'pointer' : 'default' // 添加手形光标
         };
 
         return (
-          <div 
-          key={index} 
-          style={style}
-          onClick={() => onPointClick(point.label)}  // 添加点击事件
-          >
+          <div key={index} style={style} onClick={isHighlighted ? () => onPointClick(point.label) : undefined}>
             {point.label}
           </div>
         );
