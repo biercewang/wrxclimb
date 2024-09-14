@@ -54,7 +54,7 @@ const Home: React.FC = () => {
     setSelectedPoint(label);
     setTouchTime('');
     try {
-      const response = await fetch(`/api/point-times/${label}`);
+      const response = await fetch(`/api/climbing-records/${label}`);
       if (response.ok) {
         const times = await response.json();
         setPointTimes(times);
@@ -80,7 +80,7 @@ const Home: React.FC = () => {
 
   const handleTimeSubmit = async () => {
     try {
-        const response = await fetch('/api/point-times', {
+        const response = await fetch('/api/climbing-records', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

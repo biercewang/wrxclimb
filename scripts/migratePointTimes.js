@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const PointTime = require('../api/models/PointTime');
+const PointTime = require('../models/PointTime');
 
-// 替换为您的实际 MongoDB 连接字符串
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/your_database_name';
+// 明确指定使用 climbingWall 数据库
+const MONGODB_URI = 'mongodb://localhost:27017/climbingWall';
 
 console.log('Connecting to MongoDB...');
 console.log('Connection string:', MONGODB_URI);
@@ -12,32 +12,35 @@ mongoose.connect(MONGODB_URI, {
 })
 .then(() => {
   console.log('Connected to MongoDB');
-  migrateData();
+  setupDatabase();
 })
 .catch(err => {
   console.error('Failed to connect to MongoDB:', err);
   process.exit(1);
 });
 
-async function migrateData() {
+async function setupDatabase() {
   try {
-    console.log('Fetching point times...');
-    const pointTimes = await PointTime.find({});
-    console.log(`Found ${pointTimes.length} point times`);
+    // 确保我们连接到了正确的数据库
+    console.log(`Connected to database: ${mongoose.connection.name}`);
+    
+    // 创建一些示例数据
+    const sampleData = [
+      { pointLabel: 'R1A1', timeInSeconds: 5.2, athleteName: '张三', bodyPart: '右手' },
+      { pointLabel: 'L2B3', timeInSeconds: 3.7, athleteName: '李四', bodyPart: '左脚' },
+      { pointLabel: 'R3C2', timeInSeconds: 4.5, athleteName: '王五', bodyPart: '左手' },
+    ];
 
-    for (let pointTime of pointTimes) {
-      if (!pointTime.athleteName) {
-        pointTime.athleteName = '未知运动员';
-      }
-      if (!pointTime.bodyPart) {
-        pointTime.bodyPart = '右手';
-      }
-      await pointTime.save();
-      console.log(`Updated point time: ${pointTime._id}`);
+    console.log('Creating sample data...');
+    for (let data of sampleData) {
+      const newPointTime = new PointTime(data);
+      await newPointTime.save();
+      console.log(`Created point time: ${newPointTime._id}`);
     }
-    console.log('数据迁移完成');
+
+    console.log('Database setup complete');
   } catch (error) {
-    console.error('迁移过程中出错:', error);
+    console.error('Error setting up database:', error);
   } finally {
     await mongoose.disconnect();
     console.log('Disconnected from MongoDB');
