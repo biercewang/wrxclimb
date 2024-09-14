@@ -1,10 +1,14 @@
-// models/PointTime.js
 const mongoose = require('mongoose');
 
 const pointTimeSchema = new mongoose.Schema({
     pointLabel: String,
     timeInSeconds: Number,
-    timestamp: { type: Date, default: Date.now }
-}, { collection: 'pointtimes' }); // 确保这里使用的是实际存在的集合名称
+    timestamp: { type: Date, default: Date.now },
+    athleteName: String,
+    bodyPart: {
+        type: String,
+        enum: ['左手', '右手', '左脚', '右脚']
+    }
+}, { collection: 'pointtimes' });
 
 module.exports = mongoose.model('PointTime', pointTimeSchema);
