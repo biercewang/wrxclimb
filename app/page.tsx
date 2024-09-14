@@ -75,8 +75,8 @@ const Home: React.FC = () => {
     setAthleteName(event.target.value);
   };
 
-  const handleBodyPartChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setBodyPart(event.target.value as '左手' | '右手' | '左脚' | '右脚');
+  const handleBodyPartChange = (selectedPart: '左手' | '右手' | '左脚' | '右脚') => {
+    setBodyPart(selectedPart);
   };
 
   const handleTimeSubmit = async () => {
@@ -390,16 +390,19 @@ const Home: React.FC = () => {
                   placeholder="运动员姓名"
                   className="border p-1 rounded w-full mt-2"
                 />
-                <select
-                  value={bodyPart}
-                  onChange={handleBodyPartChange}
-                  className="border p-1 rounded w-full mt-2"
-                >
-                  <option value="左手">左手</option>
-                  <option value="右手">右手</option>
-                  <option value="左脚">左脚</option>
-                  <option value="右脚">右脚</option>
-                </select>
+                <div className="mt-2 flex justify-between">
+                  {['左手', '右手', '左脚', '右脚'].map((part) => (
+                    <button
+                      key={part}
+                      onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
+                      className={`px-2 py-1 rounded ${
+                        bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      }`}
+                    >
+                      {part}
+                    </button>
+                  ))}
+                </div>
                 <input
                   type="text"
                   value={touchTime}
