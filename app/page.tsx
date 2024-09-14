@@ -36,6 +36,7 @@ const Home: React.FC = () => {
   const [pointTimes, setPointTimes] = useState<PointTime[]>([]);
   const [athleteName, setAthleteName] = useState<string>('');
   const [bodyPart, setBodyPart] = useState<'左手' | '右手' | '左脚' | '右脚'>('右手');
+  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -102,6 +103,10 @@ const Home: React.FC = () => {
     } catch (error) {
         console.error("Error:", error);
     }
+  };
+
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
   };
 
   const ClimbingWall: React.FC<{widthmm: number, heightmm: number}> = ({ widthmm, heightmm }) => (
@@ -244,102 +249,16 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-gray-200 text-center p-4">
+      <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
         <h1>欢迎使用攀岩墙模拟器</h1>
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={toggleSettings}
+        >
+          {showSettings ? "隐藏设置" : "修改岩壁参数"}
+        </button>
       </header>
       <div className="flex flex-grow overflow-hidden">
-        {/* 左侧设置区 */}
-        <div className="flex flex-col w-64 bg-gray-100 p-4 space-y-2">
-          <label className="block">
-            岩壁宽度 (mm):
-            <input
-              type="number"
-              value={wallDimensions.width}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, width: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            岩壁高度 (mm):
-            <input
-              type="number"
-              value={wallDimensions.height}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, height: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            底部边距 (mm):
-            <input
-              type="number"
-              value={wallDimensions.marginBottom}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, marginBottom: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            左侧边距 (mm):
-            <input
-              type="number"
-              value={wallDimensions.marginLeft}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, marginLeft: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            点间距 (mm):
-            <input
-              type="number"
-              value={wallDimensions.pointSpacing}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, pointSpacing: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            水平空白后 (点):
-            <input
-              type="number"
-              value={wallDimensions.horizontalBlankAfter}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankAfter: parseInt(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            垂直空白后 (点):
-            <input
-              type="number"
-              value={wallDimensions.verticalBlankAfter}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankAfter: parseInt(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            水平空白长度 (mm):
-            <input
-              type="number"
-              value={wallDimensions.horizontalBlankLength}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankLength: parseFloat(e.target.value) })}
-            />
-          </label>
-          <label className="block">
-            垂直空白长度 (mm):
-            <input
-              type="number"
-              value={wallDimensions.verticalBlankLength}
-              className="mt-1 p-1 border rounded"
-              onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankLength: parseFloat(e.target.value) })}
-            />
-          </label>
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
-            生成岩壁
-          </button>
-          <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
-          <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
-            应用高亮
-          </button>
-        </div>
-
         {/* 中间岩壁显示区 */}
         <div className="flex-grow overflow-auto">
           <div className="relative" style={{ width: `${wallDimensions.width}px`, height: `${wallDimensions.height}px` }}>
@@ -363,58 +282,155 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* 右侧时间记录区 */}
-        <div className="flex flex-col w-64 bg-gray-100 p-4 space-y-2">
-          {selectedPoint && (
-            <div className="border rounded bg-white shadow p-4">
-              <h3>选中点: {selectedPoint}</h3>
-              <input
-                type="text"
-                value={athleteName}
-                onChange={handleAthleteNameChange}
-                placeholder="运动员姓名"
-                className="border p-1 rounded w-full mt-2"
-              />
-              <select
-                value={bodyPart}
-                onChange={handleBodyPartChange}
-                className="border p-1 rounded w-full mt-2"
-              >
-                <option value="左手">左手</option>
-                <option value="右手">右手</option>
-                <option value="左脚">左脚</option>
-                <option value="右脚">右脚</option>
-              </select>
-              <input
-                type="text"
-                value={touchTime}
-                onChange={handleTimeChange}
-                placeholder="输入时间 (秒)"
-                className="border p-1 rounded w-full mt-2"
-              />
-              <button
-                className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                onClick={handleTimeSubmit}
-              >
-                提交时间
+        {/* 右侧区域 */}
+        <div className="w-64 bg-gray-100 overflow-hidden relative">
+          {/* 设置区 */}
+          <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className="space-y-2">
+              <label className="block">
+                岩壁宽度 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.width}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, width: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                岩壁高度 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.height}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, height: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                底部边距 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.marginBottom}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, marginBottom: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                左侧边距 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.marginLeft}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, marginLeft: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                点间距 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.pointSpacing}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, pointSpacing: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                水平空白后 (点):
+                <input
+                  type="number"
+                  value={wallDimensions.horizontalBlankAfter}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankAfter: parseInt(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                垂直空白后 (点):
+                <input
+                  type="number"
+                  value={wallDimensions.verticalBlankAfter}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankAfter: parseInt(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                水平空白长度 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.horizontalBlankLength}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankLength: parseFloat(e.target.value) })}
+                />
+              </label>
+              <label className="block">
+                垂直空白长度 (mm):
+                <input
+                  type="number"
+                  value={wallDimensions.verticalBlankLength}
+                  className="mt-1 p-1 border rounded"
+                  onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankLength: parseFloat(e.target.value) })}
+                />
+              </label>
+              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
+                生成岩壁
               </button>
-              <div className="mt-4">
-                <h4>之前的时间:</h4>
-                <ul>
-                  {pointTimes
-                    .filter(time => time.pointLabel === selectedPoint)
-                    .map((time, index) => (
-                      <li key={index} className="mb-2 p-2 bg-gray-100 rounded">
-                        <div><strong>运动员:</strong> {time.athleteName}</div>
-                        <div><strong>使用部位:</strong> {time.bodyPart}</div>
-                        <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
-                        <div><strong>记录时间:</strong> {new Date(time.timestamp).toLocaleString()}</div>
-                      </li>
-                    ))}
-                </ul>
-              </div>
+              <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
+              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
+                应用高亮
+              </button>
             </div>
-          )}
+          </div>
+
+          {/* 时间记录区 */}
+          <div className={`p-4 overflow-y-auto h-full ${showSettings ? 'hidden' : 'block'}`}>
+            {selectedPoint && (
+              <div className="border rounded bg-white shadow p-4">
+                <h3>选中点: {selectedPoint}</h3>
+                <input
+                  type="text"
+                  value={athleteName}
+                  onChange={handleAthleteNameChange}
+                  placeholder="运动员姓名"
+                  className="border p-1 rounded w-full mt-2"
+                />
+                <select
+                  value={bodyPart}
+                  onChange={handleBodyPartChange}
+                  className="border p-1 rounded w-full mt-2"
+                >
+                  <option value="左手">左手</option>
+                  <option value="右手">右手</option>
+                  <option value="左脚">左脚</option>
+                  <option value="右脚">右脚</option>
+                </select>
+                <input
+                  type="text"
+                  value={touchTime}
+                  onChange={handleTimeChange}
+                  placeholder="输入时间 (秒)"
+                  className="border p-1 rounded w-full mt-2"
+                />
+                <button
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={handleTimeSubmit}
+                >
+                  提交时间
+                </button>
+                <div className="mt-4">
+                  <h4>之前的时间:</h4>
+                  <ul>
+                    {pointTimes
+                      .filter(time => time.pointLabel === selectedPoint)
+                      .map((time, index) => (
+                        <li key={index} className="mb-2 p-2 bg-gray-100 rounded">
+                          <div><strong>运动员:</strong> {time.athleteName}</div>
+                          <div><strong>使用部位:</strong> {time.bodyPart}</div>
+                          <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
+                          <div><strong>记录时间:</strong> {new Date(time.timestamp).toLocaleString()}</div>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <footer className="bg-gray-200 text-center p-2">
