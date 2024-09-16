@@ -82,28 +82,45 @@ const Home: React.FC = () => {
   };
 
   const handleTimeSubmit = async () => {
+    // 验证运动员姓名和时间不为空
+    if (!athleteName.trim()) {
+      alert('请输入运动员姓名');
+      return;
+    }
+    if (!touchTime.trim()) {
+      alert('请输入触摸时间');
+      return;
+    }
+    if (!selectedPoint) {
+      alert('请选择一个岩点');
+      return;
+    }
+
     try {
-        const response = await fetch('/api/climbing-records', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                pointLabel: selectedPoint,
-                timeInSeconds: parseFloat(touchTime),
-                athleteName,
-                bodyPart
-            })
-        });
-        if (response.ok) {
-            const newTime = await response.json();
-            setPointTimes(prevTimes => [...prevTimes, newTime]);
-            console.log("Time saved successfully");
-        } else {
-            throw new Error('Failed to save time');
-        }
+      const response = await fetch('/api/climbing-records', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pointLabel: selectedPoint,
+          timeInSeconds: parseFloat(touchTime),
+          athleteName,
+          bodyPart
+        })
+      });
+      if (response.ok) {
+        const newTime = await response.json();
+        setPointTimes(prevTimes => [...prevTimes, newTime]);
+        setTouchTime(''); // 清空时间输入框
+        console.log("时间保存成功");
+
+      } else {
+        throw new Error('保存时间失败');
+      }
     } catch (error) {
-        console.error("Error:", error);
+      console.error("错误:", error);
+      alert('保存时间时出错');
     }
   };
 
@@ -437,42 +454,59 @@ const Home: React.FC = () => {
 
           {/* 时间记录区 */}
           <div className={`p-4 overflow-y-auto h-full ${showSettings ? 'hidden' : 'block'}`}>
+            {/* 运动员姓名输入 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">运动员姓名</label>
+              <input
+                type="text"
+                value={athleteName}
+                onChange={handleAthleteNameChange}
+                placeholder="输入运动员姓名"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+
+            {/* 时间填列区域 - 始终显示 */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">触摸时间 (秒)</label>
+              <input
+                type="text"
+                value={touchTime}
+                onChange={handleTimeChange}
+                placeholder="输入时间 (秒)"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">使用部位</label>
+              <div className="mt-2 flex justify-between">
+                {['左手', '右手', '左脚', '右脚'].map((part) => (
+                  <button
+                    key={part}
+                    onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
+                    className={`px-3 py-1 rounded ${
+                      bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                    }`}
+                  >
+                    {part}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <button
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              onClick={handleTimeSubmit}
+              disabled={!selectedPoint || !athleteName.trim() || !touchTime.trim()}
+            >
+              提交时间
+            </button>
+
             {selectedPoint && (
-              <div className="border rounded bg-white shadow p-4">
+              <div className="mt-4">
                 <h3 className="text-lg font-semibold mb-2">选中点: {selectedPoint}</h3>
-                <input
-                  type="text"
-                  value={athleteName}
-                  onChange={handleAthleteNameChange}
-                  placeholder="运动员姓名"
-                  className="border p-2 rounded w-full mt-2"
-                />
-                <div className="mt-2 flex justify-between">
-                  {['左手', '右手', '左脚', '右脚'].map((part) => (
-                    <button
-                      key={part}
-                      onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
-                      className={`px-3 py-1 rounded ${
-                        bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                      }`}
-                    >
-                      {part}
-                    </button>
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={touchTime}
-                  onChange={handleTimeChange}
-                  placeholder="输入时间 (秒)"
-                  className="border p-2 rounded w-full mt-2"
-                />
-                <button
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
-                  onClick={handleTimeSubmit}
-                >
-                  提交时间
-                </button>
+                {/* 显示选中点的时间记录 */}
                 <div className="mt-4">
                   <h4 className="font-semibold mb-2">之前的时间:</h4>
                   <ul className="space-y-2">
