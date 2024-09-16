@@ -122,7 +122,6 @@ const Home: React.FC = () => {
         setPointTimes(prevTimes => [...prevTimes, newTime]);
         setTouchTime(''); // 清空时间输入框
         console.log("时间保存成功");
-        alert("时间保存成功");
       } else {
         throw new Error('保存时间失败');
       }
@@ -154,7 +153,6 @@ const Home: React.FC = () => {
         // 从本地状态中移除被删除的记录
         setPointTimes(prevTimes => prevTimes.filter(time => time._id !== id));
         console.log(`记录删除成功，ID: ${id}`);
-        alert(`记录已成功删除\nID: ${id}`);  // 添加成功反馈，包含ID
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || '删除记录失败');
