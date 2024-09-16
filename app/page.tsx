@@ -424,6 +424,28 @@ const Home: React.FC = () => {
           {/* 设置区 */}
           <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="space-y-2">
+              {/* 将赛道类型选择移到最上面 */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
+                <div className="mt-2 flex justify-between">
+                  {['儿童', '成人'].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => setWallDimensions({ ...wallDimensions, walltype: type as '儿童' | '成人' })}
+                      className={`px-3 py-1 rounded ${
+                        wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <label className="block">
+              自定义岩壁参数：
+              </label>
+
+              {/* 其他设置选项 */}
               <label className="block">
                 岩壁宽度 (mm):
                 <input
@@ -508,27 +530,13 @@ const Home: React.FC = () => {
               <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
                 生成岩壁
               </button>
+              <label className="block">
               <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
+              </label>
+              <label className="block">
               <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
                 应用高亮
               </button>
-              
-              {/* 添加赛道类型选择 */}
-              <label className="block">
-                赛道类型:
-                <div className="mt-2 flex justify-between">
-                  {['儿童', '成人'].map((type) => (
-                    <button
-                      key={type}
-                      onClick={() => setWallDimensions({ ...wallDimensions, walltype: type as '儿童' | '成人' })}
-                      className={`px-3 py-1 rounded ${
-                        wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
               </label>
             </div>
           </div>
