@@ -19,8 +19,21 @@ const formatDate = (dateString: string) => {
   return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
 };
 
+interface WallDimensions {
+  width: number;
+  height: number;
+  marginBottom: number;
+  marginLeft: number;
+  pointSpacing: number;
+  horizontalBlankAfter: number;
+  verticalBlankAfter: number;
+  horizontalBlankLength: number;
+  verticalBlankLength: number;
+  walltype: '儿童' | '成人';
+}
+
 const Home: React.FC = () => {
-  const [wallDimensions, setWallDimensions] = useState({
+  const [childWallDimensions, setChildWallDimensions] = useState<WallDimensions>({
     width: 3000,
     height: 12000,
     marginBottom: 185,
@@ -30,16 +43,39 @@ const Home: React.FC = () => {
     verticalBlankAfter: 10,
     horizontalBlankLength: 125,
     verticalBlankLength: 245,
-    walltype: '儿童' as '儿童' | '成人' // 添加 walltype 到 wallDimensions
+    walltype: '儿童'
   });
 
-  const [showWall, setShowWall] = useState<boolean>(false);
-  const [highlightedLabels, setHighlightedLabels] = useState<string[]>([
+  const [adultWallDimensions, setAdultWallDimensions] = useState<WallDimensions>({
+    width: 3000,
+    height: 15000,
+    marginBottom: 185,
+    marginLeft: 125,
+    pointSpacing: 125,
+    horizontalBlankAfter: 11,
+    verticalBlankAfter: 10,
+    horizontalBlankLength: 125,
+    verticalBlankLength: 245,
+    walltype: '成人'
+  });
+
+  const [wallDimensions, setWallDimensions] = useState<WallDimensions>(childWallDimensions);
+
+  const [childHighlightedLabels, setChildHighlightedLabels] = useState<string[]>([
     "R8B1", "R8E5", "R7E9", "R7A6", "R7D5", "R7G1", "R6E9", "R6H6",
     "R6B5", "R6A1", "R6E1", "R5A8", "R5C6", "L5I5", "L5L1", "R5A1",
     "L4H8", "R4C8", "R4C6", "L4M4", "R4G2", "R3C10", "R3E7", "R3E5",
     "R3A2", "L2I10", "R2D9", "L2M5", "L2I1", "L1M9", "L1H8", "L1H5", "L1M2", "R8A10"
   ]);
+
+  const [adultHighlightedLabels, setAdultHighlightedLabels] = useState<string[]>([
+    // 初始化为与儿童相同的标签
+    ...childHighlightedLabels
+  ]);
+
+  const [highlightedLabels, setHighlightedLabels] = useState<string[]>(childHighlightedLabels);
+
+  const [showWall, setShowWall] = useState<boolean>(false);
   const [labelsInput, setLabelsInput] = useState<string>(highlightedLabels.join('; '));
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
   const [touchTime, setTouchTime] = useState<string>('');
@@ -61,6 +97,11 @@ const Home: React.FC = () => {
   const handleApplyLabels = () => {
     const labelsArray = labelsInput.split(';').map(label => label.trim()).filter(label => label !== '');
     setHighlightedLabels(labelsArray);
+    if (wallDimensions.walltype === '儿童') {
+      setChildHighlightedLabels(labelsArray);
+    } else {
+      setAdultHighlightedLabels(labelsArray);
+    }
   };
 
   const handlePointClick = async (label: string) => {
@@ -361,6 +402,26 @@ const Home: React.FC = () => {
     );
   };
 
+  const switchWallType = (type: '儿童' | '成人') => {
+    if (type === '儿童') {
+      setWallDimensions(childWallDimensions);
+      setHighlightedLabels(childHighlightedLabels);
+    } else {
+      setWallDimensions(adultWallDimensions);
+      setHighlightedLabels(adultHighlightedLabels);
+    }
+  };
+
+  const handleWallDimensionsChange = (newDimensions: Partial<WallDimensions>) => {
+    const updatedDimensions = { ...wallDimensions, ...newDimensions };
+    setWallDimensions(updatedDimensions);
+    if (updatedDimensions.walltype === '儿童') {
+      setChildWallDimensions(updatedDimensions);
+    } else {
+      setAdultWallDimensions(updatedDimensions);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
@@ -424,14 +485,13 @@ const Home: React.FC = () => {
           {/* 设置区 */}
           <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="space-y-2">
-              {/* 将赛道类型选择移到最上面 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
                 <div className="mt-2 flex justify-between">
                   {['儿童', '成人'].map((type) => (
                     <button
                       key={type}
-                      onClick={() => setWallDimensions({ ...wallDimensions, walltype: type as '儿童' | '成人' })}
+                      onClick={() => switchWallType(type as '儿童' | '成人')}
                       className={`px-3 py-1 rounded ${
                         wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                       }`}
@@ -452,7 +512,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.width}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, width: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ width: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -461,7 +521,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.height}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, height: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ height: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -470,7 +530,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.marginBottom}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, marginBottom: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ marginBottom: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -479,7 +539,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.marginLeft}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, marginLeft: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ marginLeft: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -488,7 +548,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.pointSpacing}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, pointSpacing: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ pointSpacing: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -497,7 +557,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.horizontalBlankAfter}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankAfter: parseInt(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ horizontalBlankAfter: parseInt(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -506,7 +566,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.verticalBlankAfter}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankAfter: parseInt(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ verticalBlankAfter: parseInt(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -515,7 +575,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.horizontalBlankLength}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, horizontalBlankLength: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ horizontalBlankLength: parseFloat(e.target.value) })}
                 />
               </label>
               <label className="block">
@@ -524,7 +584,7 @@ const Home: React.FC = () => {
                   type="number"
                   value={wallDimensions.verticalBlankLength}
                   className="mt-1 p-1 border rounded"
-                  onChange={e => setWallDimensions({ ...wallDimensions, verticalBlankLength: parseFloat(e.target.value) })}
+                  onChange={e => handleWallDimensionsChange({ verticalBlankLength: parseFloat(e.target.value) })}
                 />
               </label>
               <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
