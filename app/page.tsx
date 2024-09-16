@@ -28,7 +28,8 @@ const Home: React.FC = () => {
     horizontalBlankAfter: 11,
     verticalBlankAfter: 10,
     horizontalBlankLength: 125,
-    verticalBlankLength: 245
+    verticalBlankLength: 245,
+    walltype: '儿童' as '儿童' | '成人' // 添加 walltype 到 wallDimensions
   });
 
   const [showWall, setShowWall] = useState<boolean>(false);
@@ -47,7 +48,6 @@ const Home: React.FC = () => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
-  const [trackType, setTrackType] = useState<'儿童' | '成人'>('儿童');
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -118,7 +118,7 @@ const Home: React.FC = () => {
           timeInSeconds: parseFloat(touchTime),
           athleteName,
           bodyPart,
-          walltype: trackType
+          walltype: wallDimensions.walltype // 使用当前选择的赛道类型
         })
       });
       if (response.ok) {
@@ -126,7 +126,7 @@ const Home: React.FC = () => {
         setPointTimes(prevTimes => [...prevTimes, newTime]);
         setTouchTime(''); // 清空时间输入框
         console.log("时间保存成功");
-        alert('时间记录已成功保存');
+        alert(`时间记录已成功保存（${wallDimensions.walltype}赛道）`);
       } else {
         throw new Error('保存时间失败');
       }
@@ -246,7 +246,7 @@ const Home: React.FC = () => {
 
       rowCounter++;
       y += pointSpacing;
-      // 处理垂直空白和行部分循环
+      // 处理垂直空白和行部分循
       if (rowCounter % verticalBlankAfter === 0) {
         y += verticalBlankLength;
       }
@@ -504,6 +504,24 @@ const Home: React.FC = () => {
               <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
                 应用高亮
               </button>
+              
+              {/* 添加赛道类型选择 */}
+              <label className="block">
+                赛道类型:
+                <div className="mt-2 flex justify-between">
+                  {['儿童', '成人'].map((type) => (
+                    <button
+                      key={type}
+                      onClick={() => setWallDimensions({ ...wallDimensions, walltype: type as '儿童' | '成人' })}
+                      className={`px-3 py-1 rounded ${
+                        wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      }`}
+                    >
+                      {type}
+                    </button>
+                  ))}
+                </div>
+              </label>
             </div>
           </div>
 
@@ -550,29 +568,12 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">赛道类型</label>
-              <div className="mt-2 flex justify-between">
-                {['儿童', '成人'].map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => setTrackType(type as '儿童' | '成人')}
-                    className={`px-3 py-1 rounded ${
-                      trackType === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                    }`}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <button
               className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
               onClick={handleTimeSubmit}
               disabled={!selectedPoint || !athleteName.trim() || !touchTime.trim()}
             >
-              提交时间
+              提交时间 ({wallDimensions.walltype}赛道)
             </button>
 
             {selectedPoint && (
@@ -580,10 +581,10 @@ const Home: React.FC = () => {
                 <h3 className="text-lg font-semibold mb-2">选中点: {selectedPoint}</h3>
                 {/* 显示选中点的时间记录 */}
                 <div className="mt-4">
-                  <h4 className="font-semibold mb-2">之前的时间:</h4>
+                  <h4 className="font-semibold mb-2">之前的时间 ({wallDimensions.walltype}赛道):</h4>
                   <ul className="space-y-2">
                     {pointTimes
-                      .filter(time => time.pointLabel === selectedPoint)
+                      .filter(time => time.pointLabel === selectedPoint && time.walltype === wallDimensions.walltype)
                       .map((time, index) => (
                         <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
                           <div>
