@@ -310,7 +310,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* 右侧区域 */}
-        <div className="w-64 bg-gray-100 overflow-hidden relative">
+        <div className="w-96 bg-gray-100 overflow-hidden relative">
           {/* 设置区 */}
           <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="space-y-2">
@@ -409,20 +409,20 @@ const Home: React.FC = () => {
           <div className={`p-4 overflow-y-auto h-full ${showSettings ? 'hidden' : 'block'}`}>
             {selectedPoint && (
               <div className="border rounded bg-white shadow p-4">
-                <h3>选中点: {selectedPoint}</h3>
+                <h3 className="text-lg font-semibold mb-2">选中点: {selectedPoint}</h3>
                 <input
                   type="text"
                   value={athleteName}
                   onChange={handleAthleteNameChange}
                   placeholder="运动员姓名"
-                  className="border p-1 rounded w-full mt-2"
+                  className="border p-2 rounded w-full mt-2"
                 />
                 <div className="mt-2 flex justify-between">
                   {['左手', '右手', '左脚', '右脚'].map((part) => (
                     <button
                       key={part}
                       onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
-                      className={`px-2 py-1 rounded ${
+                      className={`px-3 py-1 rounded ${
                         bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                       }`}
                     >
@@ -435,21 +435,21 @@ const Home: React.FC = () => {
                   value={touchTime}
                   onChange={handleTimeChange}
                   placeholder="输入时间 (秒)"
-                  className="border p-1 rounded w-full mt-2"
+                  className="border p-2 rounded w-full mt-2"
                 />
                 <button
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
                   onClick={handleTimeSubmit}
                 >
                   提交时间
                 </button>
                 <div className="mt-4">
-                  <h4>之前的时间:</h4>
-                  <ul>
+                  <h4 className="font-semibold mb-2">之前的时间:</h4>
+                  <ul className="space-y-2">
                     {pointTimes
                       .filter(time => time.pointLabel === selectedPoint)
                       .map((time, index) => (
-                        <li key={index} className="mb-2 p-2 bg-gray-100 rounded">
+                        <li key={index} className="p-2 bg-gray-100 rounded">
                           <div><strong>运动员:</strong> {time.athleteName}</div>
                           <div><strong>使用部位:</strong> {time.bodyPart}</div>
                           <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
