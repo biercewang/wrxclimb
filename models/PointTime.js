@@ -11,4 +11,4 @@ const pointTimeSchema = new mongoose.Schema({
     }
 }, { collection: 'pointtimes' });
 
-module.exports = mongoose.models.PointTime || mongoose.model('PointTime', pointTimeSchema, 'pointtimes');
+module.exports = mongoose.models.PointTime || mongoose.model('PointTime', pointTimeSchema);

@@ -67,14 +67,18 @@ app.prepare().then(() => {
 
   server.delete('/api/climbing-records/:id', async (req, res) => {
     try {
-      const pointTime = await PointTime.findByIdAndRemove(req.params.id);
+      console.log('Attempting to delete record with ID:', req.params.id);
+      console.log('PointTime model methods:', Object.keys(PointTime));
+      const pointTime = await PointTime.findByIdAndDelete(req.params.id);
       if (!pointTime) {
-        return res.status(404).json({ message: 'Climbing record not found' });
+        return res.status(404).json({ message: '未找到记录' });
       }
-      res.json({ message: 'Climbing record deleted successfully' });
+      console.log(`成功删除记录，ID: ${req.params.id}`); // 添加服务器端日志
+      res.json({ message: '记录删除成功', id: req.params.id });
     } catch (error) {
-      console.error('Error deleting climbing record:', error);
-      res.status(500).json({ message: 'Failed to delete climbing record' });
+      console.error('删除记录时出错:', error);
+      console.error('Error stack:', error.stack);
+      res.status(500).json({ message: '删除记录失败', id: req.params.id, error: error.message });
     }
   });
 

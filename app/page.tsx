@@ -8,6 +8,7 @@ interface PointTime {
   timestamp: string;
   athleteName: string;
   bodyPart: '左手' | '右手' | '左脚' | '右脚';
+  _id: string;
 }
 
 const Home: React.FC = () => {
@@ -112,6 +113,35 @@ const Home: React.FC = () => {
 
   const handleScaleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setScale(parseFloat(event.target.value));
+  };
+
+  const handleDeleteRecord = async (id: string, athleteName: string, timeInSeconds: number) => {
+    // 添加更详细的确认对话框
+    if (!confirm(`确定要删除这条记录吗？\n运动员: ${athleteName}\n时间: ${timeInSeconds}秒\nID: ${id}`)) {
+      return; // 如果用户取消，则不执行删除操作
+    }
+
+    try {
+      const response = await fetch(`/api/climbing-records/${id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        // 从本地状态中移除被删除的记录
+        setPointTimes(prevTimes => prevTimes.filter(time => time._id !== id));
+        console.log(`记录删除成功，ID: ${id}`);
+        alert(`记录已成功删除\nID: ${id}`);  // 添加成功反馈，包含ID
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '删除记录失败');
+      }
+    } catch (error: unknown) {
+      console.error("错误:", error);
+      if (error instanceof Error) {
+        alert(`删除失败: ${error.message}\nID: ${id}`);  // 添加错误反馈，包含ID
+      } else {
+        alert(`删除失败：发生未知错误\nID: ${id}`);
+      }
+    }
   };
 
   const ClimbingWall: React.FC<{widthmm: number, heightmm: number}> = ({ widthmm, heightmm }) => (
@@ -449,11 +479,19 @@ const Home: React.FC = () => {
                     {pointTimes
                       .filter(time => time.pointLabel === selectedPoint)
                       .map((time, index) => (
-                        <li key={index} className="p-2 bg-gray-100 rounded">
-                          <div><strong>运动员:</strong> {time.athleteName}</div>
-                          <div><strong>使用部位:</strong> {time.bodyPart}</div>
-                          <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
-                          <div><strong>记录时间:</strong> {new Date(time.timestamp).toLocaleString()}</div>
+                        <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
+                          <div>
+                            <div><strong>运动员:</strong> {time.athleteName}</div>
+                            <div><strong>使用部位:</strong> {time.bodyPart}</div>
+                            <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
+                            <div><strong>记录时间:</strong> {new Date(time.timestamp).toLocaleString()}</div>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
+                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                          >
+                            删除
+                          </button>
                         </li>
                       ))}
                   </ul>
