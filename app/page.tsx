@@ -689,7 +689,7 @@ const Home: React.FC = () => {
                             <div><strong>使用部位:</strong> {time.bodyPart}</div>
                             <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
                             <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
-                            <div><strong>墙面类型:</strong> {time.walltype}</div>
+                            {/* <div><strong>墙面类型:</strong> {time.walltype}</div> */}
                           </div>
                           <button
                             onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
