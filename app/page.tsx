@@ -87,6 +87,7 @@ const Home: React.FC = () => {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
+  const [showNonHighlightedPoints, setShowNonHighlightedPoints] = useState<boolean>(true);
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -249,6 +250,7 @@ const Home: React.FC = () => {
     highlightedLabels: string[];
     onPointClick: (label: string) => void;
     pointTimes: PointTime[];
+    showNonHighlightedPoints: boolean;
   }> = ({
     widthmm,
     heightmm,
@@ -263,7 +265,8 @@ const Home: React.FC = () => {
     verticalBlankLength,
     highlightedLabels,
     onPointClick,
-    pointTimes
+    pointTimes,
+    showNonHighlightedPoints
   }) => {
     const points = [];
     const columnsSequence = 'ABCDEFGHILM'.split('');
@@ -312,6 +315,9 @@ const Home: React.FC = () => {
       <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
         {points.map((point, index) => {
           const isHighlighted = highlightedLabels.includes(point.label);
+          if (!isHighlighted && !showNonHighlightedPoints) {
+            return null; // 如果是非高亮点且设置为不显示，则不渲染
+          }
           const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
           const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
           const pointTime = pointTimes.find(time => time.pointLabel === point.label);
@@ -334,7 +340,7 @@ const Home: React.FC = () => {
                 color: 'white',
                 zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
               }}
-              onClick={() => onPointClick(point.label)}
+              onClick={() => isHighlighted && onPointClick(point.label)}
               onMouseEnter={() => setHoveredPoint(point.label)}
               onMouseLeave={() => setHoveredPoint(null)}
             >
@@ -478,6 +484,7 @@ const Home: React.FC = () => {
               highlightedLabels={highlightedLabels}
               onPointClick={handlePointClick}
               pointTimes={pointTimes}
+              showNonHighlightedPoints={showNonHighlightedPoints}
             />
           </div>
         </div>
@@ -600,6 +607,20 @@ const Home: React.FC = () => {
                 应用高亮
               </button>
               </label>
+
+              {/* 添加显示/隐藏非高亮点的勾选框 */}
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="show-non-highlighted"
+                  checked={showNonHighlightedPoints}
+                  onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
+                  className="mr-2"
+                />
+                <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">
+                  显示非高亮岩点
+                </label>
+              </div>
             </div>
           </div>
 
