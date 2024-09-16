@@ -359,6 +359,7 @@ const Home: React.FC = () => {
       <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
         <h1>欢迎使用攀岩墙模拟器</h1>
         <div className="flex items-center">
+          <span className="mr-4">当前赛道：{wallDimensions.walltype}</span>
           <label htmlFor="scale-slider" className="mr-2">缩放：</label>
           <input
             id="scale-slider"
@@ -579,7 +580,7 @@ const Home: React.FC = () => {
             {selectedPoint && (
               <div className="mt-4">
                 <h3 className="text-lg font-semibold mb-2">选中点: {selectedPoint}</h3>
-                {/* 显示选中点的时间记录 */}
+                {/* 显��选中点的时间记录 */}
                 <div className="mt-4">
                   <h4 className="font-semibold mb-2">之前的时间 ({wallDimensions.walltype}赛道):</h4>
                   <ul className="space-y-2">

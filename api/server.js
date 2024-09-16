@@ -40,13 +40,13 @@ app.prepare().then(() => {
 
   server.post('/api/climbing-records', async (req, res) => {
     try {
-      const { pointLabel, timeInSeconds, athleteName, bodyPart } = req.body;
+      const { pointLabel, timeInSeconds, athleteName, bodyPart,walltype } = req.body;
       const newPointTime = new PointTime({
         pointLabel,
         timeInSeconds,
         athleteName,
         bodyPart,
-        walltype: '儿童' // 默认设置为儿童
+        walltype
       });
       await newPointTime.save();
       res.status(201).json(newPointTime);
