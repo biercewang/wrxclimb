@@ -35,8 +35,9 @@ const Home: React.FC = () => {
   const [touchTime, setTouchTime] = useState<string>('');
   const [pointTimes, setPointTimes] = useState<PointTime[]>([]);
   const [athleteName, setAthleteName] = useState<string>('');
-  const [bodyPart, setBodyPart] = useState<'左手' | '右手' | '左脚' | '右脚'>('右手');
+  const [bodyPart, setBodyPart] = useState<'左手' | '右手' | '左脚' | '右脚'>('左手');
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [scale, setScale] = useState<number>(1);
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -107,6 +108,10 @@ const Home: React.FC = () => {
 
   const toggleSettings = () => {
     setShowSettings(!showSettings);
+  };
+
+  const handleScaleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setScale(parseFloat(event.target.value));
   };
 
   const ClimbingWall: React.FC<{widthmm: number, heightmm: number}> = ({ widthmm, heightmm }) => (
@@ -251,6 +256,20 @@ const Home: React.FC = () => {
     <div className="flex flex-col h-screen">
       <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
         <h1>欢迎使用攀岩墙模拟器</h1>
+        <div className="flex items-center">
+          <label htmlFor="scale-slider" className="mr-2">缩放：</label>
+          <input
+            id="scale-slider"
+            type="range"
+            min="0.1"
+            max="2"
+            step="0.1"
+            value={scale}
+            onChange={handleScaleChange}
+            className="w-32"
+          />
+          <span className="ml-2">{scale.toFixed(1)}x</span>
+        </div>
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           onClick={toggleSettings}
@@ -261,7 +280,15 @@ const Home: React.FC = () => {
       <div className="flex flex-grow overflow-hidden">
         {/* 中间岩壁显示区 */}
         <div className="flex-grow overflow-auto">
-          <div className="relative" style={{ width: `${wallDimensions.width}px`, height: `${wallDimensions.height}px` }}>
+          <div 
+            className="relative" 
+            style={{ 
+              width: `${wallDimensions.width}px`, 
+              height: `${wallDimensions.height}px`,
+              transform: `scale(${scale})`,
+              transformOrigin: 'top left'
+            }}
+          >
             <ClimbingWall widthmm={wallDimensions.width} heightmm={wallDimensions.height} />
             <RockWallPoints
               widthmm={wallDimensions.width}
