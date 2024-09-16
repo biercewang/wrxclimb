@@ -11,6 +11,12 @@ interface PointTime {
   _id: string;
 }
 
+// 在组件外部定义一个格式化日期的函数
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+};
+
 const Home: React.FC = () => {
   const [wallDimensions, setWallDimensions] = useState({
     width: 3000,
@@ -60,12 +66,14 @@ const Home: React.FC = () => {
       const response = await fetch(`/api/climbing-records/${label}`);
       if (response.ok) {
         const times = await response.json();
-        setPointTimes(times);
+        // 对时间记录进行排序，从短到长
+        const sortedTimes = times.sort((a: PointTime, b: PointTime) => a.timeInSeconds - b.timeInSeconds);
+        setPointTimes(sortedTimes);
       } else {
-        throw new Error('Failed to fetch times');
+        throw new Error('获取时间记录失败');
       }
     } catch (error) {
-      console.error("Error fetching times for point:", error);
+      console.error("获取点位时间记录时出错:", error);
     }
   };
 
@@ -114,7 +122,7 @@ const Home: React.FC = () => {
         setPointTimes(prevTimes => [...prevTimes, newTime]);
         setTouchTime(''); // 清空时间输入框
         console.log("时间保存成功");
-
+        alert("时间保存成功");
       } else {
         throw new Error('保存时间失败');
       }
@@ -251,8 +259,8 @@ const Home: React.FC = () => {
       <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
         {points.map((point, index) => {
           const isHighlighted = highlightedLabels.includes(point.label);
-          const size = isHighlighted ? '20px' : '10px'; // 点的尺寸
-          const offset = isHighlighted ? 10 : 5; // 根据是否高亮来设置偏移量
+          const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
+          const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
           const pointTime = pointTimes.find(time => time.pointLabel === point.label);
 
           return (
@@ -264,18 +272,31 @@ const Home: React.FC = () => {
                 bottom: `${point.y - offset}px`,
                 width: size,
                 height: size,
-                backgroundColor: isHighlighted ? 'red' : 'black',
-                borderRadius: '50%',
+                backgroundColor: isHighlighted ? 'transparent' : 'black',
                 cursor: 'pointer',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                fontSize: isHighlighted ? '8px' : '0',
+                fontSize: isHighlighted ? '12px' : '0',
                 color: 'white',
+                zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
               }}
               onClick={() => onPointClick(point.label)}
             >
-              {isHighlighted && point.label}
+              {isHighlighted && (
+                <>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'red',
+                      clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+                    }}
+                  />
+                  <span style={{ position: 'relative', zIndex: 3 }}>{point.label}</span>
+                </>
+              )}
               {pointTime && (
                 <div style={{
                   position: 'absolute',
@@ -356,8 +377,8 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* 右侧区域 */}
-        <div className="w-96 bg-gray-100 overflow-hidden relative">
+        {/* 右侧区域 - 增加宽度 */}
+        <div className="w-1/3 bg-gray-100 overflow-hidden relative">
           {/* 设置区 */}
           <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="space-y-2">
@@ -518,7 +539,7 @@ const Home: React.FC = () => {
                             <div><strong>运动员:</strong> {time.athleteName}</div>
                             <div><strong>使用部位:</strong> {time.bodyPart}</div>
                             <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
-                            <div><strong>记录时间:</strong> {new Date(time.timestamp).toLocaleString()}</div>
+                            <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
                           </div>
                           <button
                             onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
