@@ -69,8 +69,10 @@ const Home: React.FC = () => {
   ]);
 
   const [adultHighlightedLabels, setAdultHighlightedLabels] = useState<string[]>([
-    // 初始化为与儿童相同的标签
-    ...childHighlightedLabels
+    "R10A10","R10D3","L9M10","L9M7","R9E7","R9A2","R8A10","L8C8","R8A5","L8I3","R8E1", "L8L1", "R7B10", "L7G9", "L7M4", "L7M1", "L6F9","L6L7", "R6D4",
+    "R6B3", "L6H2", "R5E9", "L5E7", "L5M6", "R5C3", "L5H1", "R5E1",
+    "R4A10", "L4M8", "L4L5", "R4B2", "L3M10","L3M7","R3C6", "L3G4", "L3G1", "R2A9",
+    "L2F8", "R2B6", "L2G3", "R2G3", "R2F1", "R1A10", "R1H9", "R1F9", "R1F4", 
   ]);
 
   const [highlightedLabels, setHighlightedLabels] = useState<string[]>(childHighlightedLabels);
