@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const pointTimeSchema = new mongoose.Schema({
     walltype: {
         type: String,
-        enum: ['儿童', '成人']
+        enum: ['儿童', '成人'],
+        required: true // 确保这个字段是必填的
     },
     pointLabel: String,
     timeInSeconds: Number,

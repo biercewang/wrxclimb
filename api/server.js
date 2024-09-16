@@ -40,14 +40,15 @@ app.prepare().then(() => {
 
   server.post('/api/climbing-records', async (req, res) => {
     try {
-      const { pointLabel, timeInSeconds, athleteName, bodyPart,walltype } = req.body;
+      const { pointLabel, timeInSeconds, athleteName, bodyPart, walltype } = req.body;
       const newPointTime = new PointTime({
         pointLabel,
         timeInSeconds,
         athleteName,
         bodyPart,
-        walltype
+        walltype // 确保这里包含了 walltype
       });
+      console.log(newPointTime);
       await newPointTime.save();
       res.status(201).json(newPointTime);
     } catch (error) {

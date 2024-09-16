@@ -1,5 +1,6 @@
 // pages.tsx
 'use client';
+import { requestToBodyStream } from 'next/dist/server/body-streams';
 import React, { useState } from 'react';
 
 interface PointTime {
@@ -108,19 +109,25 @@ const Home: React.FC = () => {
     }
 
     try {
+      const body = JSON.stringify({
+        pointLabel: selectedPoint,
+        timeInSeconds: parseFloat(touchTime),
+        athleteName,
+        bodyPart,
+        walltype: wallDimensions.walltype
+      });
+  
+      // 添加这行来显示实际提交的 body
+      console.log("提交的 body:", body);
+  
       const response = await fetch('/api/climbing-records', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          pointLabel: selectedPoint,
-          timeInSeconds: parseFloat(touchTime),
-          athleteName,
-          bodyPart,
-          walltype: wallDimensions.walltype // 使用当前选择的赛道类型
-        })
+        body: body
       });
+      
       if (response.ok) {
         const newTime = await response.json();
         setPointTimes(prevTimes => [...prevTimes, newTime]);
@@ -574,13 +581,13 @@ const Home: React.FC = () => {
               onClick={handleTimeSubmit}
               disabled={!selectedPoint || !athleteName.trim() || !touchTime.trim()}
             >
-              提交时间 ({wallDimensions.walltype}赛道)
+              提交
             </button>
 
             {selectedPoint && (
               <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">选中点: {selectedPoint}</h3>
-                {/* 显��选中点的时间记录 */}
+                <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}</h3>
+                {/* 显选中点的时间记录 */}
                 <div className="mt-4">
                   <h4 className="font-semibold mb-2">之前的时间 ({wallDimensions.walltype}赛道):</h4>
                   <ul className="space-y-2">
