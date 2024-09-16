@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const pointTimeSchema = new mongoose.Schema({
+    walltype: {
+        type: String,
+        enum: ['儿童', '成人']
+    },
     pointLabel: String,
     timeInSeconds: Number,
     timestamp: { type: Date, default: Date.now },

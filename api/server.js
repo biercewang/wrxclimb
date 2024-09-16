@@ -40,13 +40,19 @@ app.prepare().then(() => {
 
   server.post('/api/climbing-records', async (req, res) => {
     try {
-        const { pointLabel, timeInSeconds, athleteName, bodyPart } = req.body;
-        const newPointTime = new PointTime({ pointLabel, timeInSeconds, athleteName, bodyPart });
-        await newPointTime.save();
-        res.status(201).json(newPointTime);
+      const { pointLabel, timeInSeconds, athleteName, bodyPart } = req.body;
+      const newPointTime = new PointTime({
+        pointLabel,
+        timeInSeconds,
+        athleteName,
+        bodyPart,
+        walltype: '儿童' // 默认设置为儿童
+      });
+      await newPointTime.save();
+      res.status(201).json(newPointTime);
     } catch (error) {
-        console.error('Error saving climbing record:', error);
-        res.status(500).json({ message: 'Failed to save climbing record data' });
+      console.error('Error saving climbing record:', error);
+      res.status(500).json({ message: 'Failed to save climbing record data' });
     }
   });
 

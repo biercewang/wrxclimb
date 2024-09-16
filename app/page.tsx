@@ -8,6 +8,7 @@ interface PointTime {
   timestamp: string;
   athleteName: string;
   bodyPart: '左手' | '右手' | '左脚' | '右脚';
+  walltype: '儿童' | '成人';
   _id: string;
 }
 
@@ -45,6 +46,8 @@ const Home: React.FC = () => {
   const [bodyPart, setBodyPart] = useState<'左手' | '右手' | '左脚' | '右脚'>('左手');
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [scale, setScale] = useState<number>(1);
+  const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
+  const [trackType, setTrackType] = useState<'儿童' | '成人'>('儿童');
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -114,7 +117,8 @@ const Home: React.FC = () => {
           pointLabel: selectedPoint,
           timeInSeconds: parseFloat(touchTime),
           athleteName,
-          bodyPart
+          bodyPart,
+          walltype: trackType
         })
       });
       if (response.ok) {
@@ -122,6 +126,7 @@ const Home: React.FC = () => {
         setPointTimes(prevTimes => [...prevTimes, newTime]);
         setTouchTime(''); // 清空时间输入框
         console.log("时间保存成功");
+        alert('时间记录已成功保存');
       } else {
         throw new Error('保存时间失败');
       }
@@ -280,6 +285,8 @@ const Home: React.FC = () => {
                 zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
               }}
               onClick={() => onPointClick(point.label)}
+              onMouseEnter={() => setHoveredPoint(point.label)}
+              onMouseLeave={() => setHoveredPoint(null)}
             >
               {isHighlighted && (
                 <>
@@ -309,6 +316,35 @@ const Home: React.FC = () => {
                   whiteSpace: 'nowrap'
                 }}>
                   {pointTime.athleteName} - {pointTime.bodyPart} - {pointTime.timeInSeconds}秒
+                </div>
+              )}
+              {hoveredPoint === point.label && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  color: 'white',
+                  padding: '2px 4px',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  whiteSpace: 'nowrap',
+                  zIndex: 4
+                }}>
+                  {point.label}
+                  {isHighlighted && (
+                    <>
+                      <br />
+                      {pointTimes
+                        .filter(time => time.pointLabel === point.label)
+                        .map((time, index) => (
+                          <div key={index}>
+                            {time.athleteName} - {time.bodyPart} - {time.timeInSeconds}秒
+                          </div>
+                        ))}
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -514,6 +550,23 @@ const Home: React.FC = () => {
               </div>
             </div>
 
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">赛道类型</label>
+              <div className="mt-2 flex justify-between">
+                {['儿童', '成人'].map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setTrackType(type as '儿童' | '成人')}
+                    className={`px-3 py-1 rounded ${
+                      trackType === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <button
               className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
               onClick={handleTimeSubmit}
@@ -538,6 +591,7 @@ const Home: React.FC = () => {
                             <div><strong>使用部位:</strong> {time.bodyPart}</div>
                             <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
                             <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
+                            <div><strong>墙面类型:</strong> {time.walltype}</div>
                           </div>
                           <button
                             onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
