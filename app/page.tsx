@@ -69,10 +69,10 @@ const Home: React.FC = () => {
   ]);
 
   const [adultHighlightedLabels, setAdultHighlightedLabels] = useState<string[]>([
-    "R10A10","R10D3","L9M10","L9M7","R9E7","R9A2","R8A10","L8C8","R8A5","L8I3","R8E1", "L8L1", "R7B10", "L7G9", "L7M4", "L7M1", "L6F9","L6L7", "R6D4",
+    "R10A10", "R10D3", "L9M10", "L9M7", "R9E7", "R9A2", "R8A10", "L8C8", "R8A5", "L8I3", "R8E1", "L8L1", "R7B10", "L7G9", "L7M4", "L7M1", "L6F9", "L6L7", "R6D4",
     "R6B3", "L6H2", "R5E9", "L5E7", "L5M6", "R5C3", "L5H1", "R5E1",
-    "R4A10", "L4M8", "L4L5", "R4B2", "L3M10","L3M7","R3C6", "L3G4", "L3G1", "R2A9",
-    "L2F8", "R2B6", "L2G3", "R2G3", "R2F1", "R1A10", "R1H9", "R1F9", "R1F4", 
+    "R4A10", "L4M8", "L4L5", "R4B2", "L3M10", "L3M7", "R3C6", "L3G4", "L3G1", "R2A9",
+    "L2F8", "R2B6", "L2G3", "R2G3", "R2F1", "R1A10", "R1H9", "R1F9", "R1F4",
   ]);
 
   const [highlightedLabels, setHighlightedLabels] = useState<string[]>(childHighlightedLabels);
@@ -160,10 +160,10 @@ const Home: React.FC = () => {
         bodyPart,
         walltype: wallDimensions.walltype
       });
-  
+
       // 添加这行来显示实际提交的 body
       console.log("提交的 body:", body);
-  
+
       const response = await fetch('/api/climbing-records', {
         method: 'POST',
         headers: {
@@ -171,7 +171,7 @@ const Home: React.FC = () => {
         },
         body: body
       });
-      
+
       if (response.ok) {
         const newTime = await response.json();
         setPointTimes(prevTimes => [...prevTimes, newTime]);
@@ -223,15 +223,15 @@ const Home: React.FC = () => {
     }
   };
 
-  const ClimbingWall: React.FC<{widthmm: number, heightmm: number}> = ({ widthmm, heightmm }) => (
+  const ClimbingWall: React.FC<{ widthmm: number, heightmm: number }> = ({ widthmm, heightmm }) => (
     <div style={{
       position: 'relative',
-      width: `${widthmm}px`, 
-      height: `${heightmm}px`, 
-      backgroundColor: 'lightgray', 
+      width: `${widthmm}px`,
+      height: `${heightmm}px`,
+      backgroundColor: 'lightgray',
       border: '1px solid black'
     }}>
-      攀岩: {widthmm / 100}m x {heightmm / 100}m
+      攀岩墙尺寸: {widthmm / 1000}m x {heightmm / 1000}m
     </div>
   );
 
@@ -268,147 +268,148 @@ const Home: React.FC = () => {
     pointTimes,
     showNonHighlightedPoints
   }) => {
-    const points = [];
-    const columnsSequence = 'ABCDEFGHILM'.split('');
+      const points = [];
+      const columnsSequence = 'ABCDEFGHILM'.split('');
 
-    let y = marginBottom;
-    let rowCounter = 0;
-    let sectionRowCounter = 1;
-    let currentVerticalSection = 1;
+      let y = marginBottom;
+      let rowCounter = 0;
+      let sectionRowCounter = 1;
+      let currentVerticalSection = 1;
 
-    while (y + pointSpacing <= heightmm - marginTop) {
-      let x = marginLeft;
-      let columnCounter = 0;
-      let currentHorizontalSection = 1;
-      let side = 'L'; // 从左侧开始
+      while (y + pointSpacing <= heightmm - marginTop) {
+        let x = marginLeft;
+        let columnCounter = 0;
+        let currentHorizontalSection = 1;
+        let side = 'L'; // 从左侧开始
 
-      while (x + pointSpacing <= widthmm - marginRight) {
-        const columnIndex = columnCounter % columnsSequence.length;
-        const pointLabel = `${side}${currentVerticalSection}${columnsSequence[columnIndex]}${sectionRowCounter}`;
-        points.push({ x, y, label: pointLabel });
-        columnCounter++;
+        while (x + pointSpacing <= widthmm - marginRight) {
+          const columnIndex = columnCounter % columnsSequence.length;
+          const pointLabel = `${side}${currentVerticalSection}${columnsSequence[columnIndex]}${sectionRowCounter}`;
+          points.push({ x, y, label: pointLabel });
+          columnCounter++;
 
-        x += pointSpacing;
-        // 处理水平空白
-        if (columnCounter % horizontalBlankAfter === 0) {
-          x += horizontalBlankLength;
-          side = side === 'L' ? 'R' : 'L'; // 在空白后切换侧面
-          currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移动到右侧时重置部分计数器
+          x += pointSpacing;
+          // 处理水平空白
+          if (columnCounter % horizontalBlankAfter === 0) {
+            x += horizontalBlankLength;
+            side = side === 'L' ? 'R' : 'L'; // 在空白后切换侧面
+            currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移动到右侧时重置部分计数器
+          }
+        }
+
+        rowCounter++;
+        y += pointSpacing;
+        // 处理垂直空白和行部分循
+        if (rowCounter % verticalBlankAfter === 0) {
+          y += verticalBlankLength;
+        }
+        if (sectionRowCounter === 10) {
+          sectionRowCounter = 1;
+          currentVerticalSection++;
+        } else {
+          sectionRowCounter++;
         }
       }
 
-      rowCounter++;
-      y += pointSpacing;
-      // 处理垂直空白和行部分循
-      if (rowCounter % verticalBlankAfter === 0) {
-        y += verticalBlankLength;
-      }
-      if (sectionRowCounter === 10) {
-        sectionRowCounter = 1;
-        currentVerticalSection++;
-      } else {
-        sectionRowCounter++;
-      }
-    }
+      return (
+        <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
+          {points.map((point, index) => {
+            const isHighlighted = highlightedLabels.includes(point.label);
+            if (!isHighlighted && !showNonHighlightedPoints) {
+              return null; // 如果是非高亮点且设置为不显示，则不渲染
+            }
+            const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
+            const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
+            const pointTime = pointTimes.find(time => time.pointLabel === point.label);
 
-    return (
-      <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
-        {points.map((point, index) => {
-          const isHighlighted = highlightedLabels.includes(point.label);
-          if (!isHighlighted && !showNonHighlightedPoints) {
-            return null; // 如果是非高亮点且设置为不显示，则不渲染
-          }
-          const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
-          const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
-          const pointTime = pointTimes.find(time => time.pointLabel === point.label);
-
-          return (
-            <div
-              key={index}
-              style={{
-                position: 'absolute',
-                left: `${point.x - offset}px`,
-                bottom: `${point.y - offset}px`,
-                width: size,
-                height: size,
-                backgroundColor: isHighlighted ? 'transparent' : 'black',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: isHighlighted ? '12px' : '0',
-                color: 'white',
-                zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
-              }}
-              onClick={() => isHighlighted && onPointClick(point.label)}
-              onMouseEnter={() => setHoveredPoint(point.label)}
-              onMouseLeave={() => setHoveredPoint(null)}
-            >
-              {isHighlighted && (
-                <>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: 'red',
-                      clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
-                    }}
-                  />
-                  <span style={{ position: 'relative', zIndex: 3 }}>{point.label}</span>
-                </>
-              )}
-              {pointTime && (
-                <div style={{
+            return (
+              <div
+                key={index}
+                style={{
                   position: 'absolute',
-                  top: '100%',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  backgroundColor: 'rgba(0,0,0,0.7)',
+                  left: `${point.x - offset}px`,
+                  bottom: `${point.y - offset}px`,
+                  width: size,
+                  height: size,
+                  backgroundColor: isHighlighted ? 'transparent' : 'black',
+                  borderRadius: isHighlighted ? '0' : '50%', // 非高亮点设置为圆形
+                  cursor: isHighlighted ? 'pointer' : 'default',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: isHighlighted ? '12px' : '0',
                   color: 'white',
-                  padding: '2px 4px',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  whiteSpace: 'nowrap'
-                }}>
-                  {pointTime.athleteName} - {pointTime.bodyPart} - {pointTime.timeInSeconds}秒
-                </div>
-              )}
-              {hoveredPoint === point.label && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  backgroundColor: 'rgba(0,0,0,0.7)',
-                  color: 'white',
-                  padding: '2px 4px',
-                  borderRadius: '4px',
-                  fontSize: '10px',
-                  whiteSpace: 'nowrap',
-                  zIndex: 4
-                }}>
-                  {point.label}
-                  {isHighlighted && (
-                    <>
-                      <br />
-                      {pointTimes
-                        .filter(time => time.pointLabel === point.label)
-                        .map((time, index) => (
-                          <div key={index}>
-                            {time.athleteName} - {time.bodyPart} - {time.timeInSeconds}秒
-                          </div>
-                        ))}
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+                  zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
+                }}
+                onClick={() => isHighlighted && onPointClick(point.label)}
+                onMouseEnter={() => setHoveredPoint(point.label)}
+                onMouseLeave={() => setHoveredPoint(null)}
+              >
+                {isHighlighted && (
+                  <>
+                    <div
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'red',
+                        clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+                      }}
+                    />
+                    <span style={{ position: 'relative', zIndex: 3 }}>{point.label}</span>
+                  </>
+                )}
+                {pointTime && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    color: 'white',
+                    padding: '2px 4px',
+                    borderRadius: '4px',
+                    fontSize: '10px',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {pointTime.athleteName} - {pointTime.bodyPart} - {pointTime.timeInSeconds}秒
+                  </div>
+                )}
+                {hoveredPoint === point.label && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    color: 'white',
+                    padding: '2px 4px',
+                    borderRadius: '4px',
+                    fontSize: '10px',
+                    whiteSpace: 'nowrap',
+                    zIndex: 4
+                  }}>
+                    {point.label}
+                    {isHighlighted && (
+                      <>
+                        <br />
+                        {pointTimes
+                          .filter(time => time.pointLabel === point.label)
+                          .map((time, index) => (
+                            <div key={index}>
+                              {time.athleteName} - {time.bodyPart} - {time.timeInSeconds}秒
+                            </div>
+                          ))}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      );
+    };
 
   const switchWallType = (type: '儿童' | '成人') => {
     if (type === '儿童') {
@@ -433,10 +434,10 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col h-screen">
       <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
-        <h1>欢迎使用攀岩墙模拟器</h1>
+        <h1>欢迎使用攀岩时间记录器</h1>
         <div className="flex items-center">
           <span className="mr-4">当前赛道：{wallDimensions.walltype}</span>
-          <label htmlFor="scale-slider" className="mr-2">缩放：</label>
+          <label htmlFor="scale-slider" className="mr-2">岩壁缩放：</label>
           <input
             id="scale-slider"
             type="range"
@@ -459,10 +460,10 @@ const Home: React.FC = () => {
       <div className="flex flex-grow overflow-hidden">
         {/* 中间岩壁显示区 */}
         <div className="flex-grow overflow-auto">
-          <div 
-            className="relative" 
-            style={{ 
-              width: `${wallDimensions.width}px`, 
+          <div
+            className="relative"
+            style={{
+              width: `${wallDimensions.width}px`,
               height: `${wallDimensions.height}px`,
               transform: `scale(${scale})`,
               transformOrigin: 'top left'
@@ -501,9 +502,8 @@ const Home: React.FC = () => {
                     <button
                       key={type}
                       onClick={() => switchWallType(type as '儿童' | '成人')}
-                      className={`px-3 py-1 rounded ${
-                        wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                      }`}
+                      className={`px-3 py-1 rounded ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                        }`}
                     >
                       {type}
                     </button>
@@ -511,7 +511,7 @@ const Home: React.FC = () => {
                 </div>
               </div>
               <label className="block">
-              自定义岩壁参数：
+                自定义岩壁参数：
               </label>
 
               {/* 其他设置选项 */}
@@ -600,12 +600,12 @@ const Home: React.FC = () => {
                 生成岩壁
               </button>
               <label className="block">
-              <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
+                <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
               </label>
               <label className="block">
-              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
-                应用高亮
-              </button>
+                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
+                  应用高亮
+                </button>
               </label>
 
               {/* 添加显示/隐藏非高亮点的勾选框 */}
@@ -618,7 +618,7 @@ const Home: React.FC = () => {
                   className="mr-2"
                 />
                 <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">
-                  显示非高亮岩点
+                  显示/隐藏岩孔
                 </label>
               </div>
             </div>
@@ -657,9 +657,8 @@ const Home: React.FC = () => {
                   <button
                     key={part}
                     onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
-                    className={`px-3 py-1 rounded ${
-                      bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                    }`}
+                    className={`px-3 py-1 rounded ${bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      }`}
                   >
                     {part}
                   </button>
