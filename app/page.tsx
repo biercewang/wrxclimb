@@ -497,7 +497,7 @@ const Home: React.FC = () => {
             <div className="space-y-2">
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
-                <div className="mt-2 flex justify-between">
+                <div className="mt-2 flex justify-left">
                   {['儿童', '成人'].map((type) => (
                     <button
                       key={type}
@@ -509,6 +509,16 @@ const Home: React.FC = () => {
                     </button>
                   ))}
                 </div>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="show-non-highlighted"
+                  checked={showNonHighlightedPoints}
+                  onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
+                  className="mr-2"
+                />
+                <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">显示/隐藏岩孔</label>
               </div>
               <label className="block">
                 自定义岩壁参数：
@@ -609,18 +619,7 @@ const Home: React.FC = () => {
               </label>
 
               {/* 添加显示/隐藏非高亮点的勾选框 */}
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="show-non-highlighted"
-                  checked={showNonHighlightedPoints}
-                  onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
-                  className="mr-2"
-                />
-                <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">
-                  显示/隐藏岩孔
-                </label>
-              </div>
+
             </div>
           </div>
 
