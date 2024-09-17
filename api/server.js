@@ -2,6 +2,7 @@
 const express = require('express');
 const next = require('next');
 const mongoose = require('mongoose');
+const dbConnect = require('../lib/dbConnect');
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -11,8 +12,7 @@ const handle = app.getRequestHandler();
 // 更新 MongoDB 连接字符串
 const MONGODB_URI = 'mongodb://localhost:27017/climbingWall'; // 修改为新的数据库名
 
-mongoose.connect(MONGODB_URI, {
-}).then(() => console.log("MongoDB connected to climbingWall database"))
+dbConnect().then(() => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB connection error:", err));
 
 app.prepare().then(() => {
