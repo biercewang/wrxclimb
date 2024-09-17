@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 //server.js
 const express = require('express');
 const next = require('next');
@@ -10,7 +12,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 // 更新 MongoDB 连接字符串
-const MONGODB_URI = 'mongodb://localhost:27017/climbingWall'; // 修改为新的数据库名
+// const MONGODB_URI = 'mongodb://localhost:27017/climbingWall'; // 修改为新的数据库名
 
 dbConnect().then(() => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB connection error:", err));
@@ -109,4 +111,9 @@ app.prepare().then(() => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`);
   });
+
+  console.log('Environment variables:');
+  console.log('USE_REMOTE_DB:', process.env.USE_REMOTE_DB);
+  console.log('MONGODB_LOCAL_URI:', process.env.MONGODB_LOCAL_URI);
+  console.log('MONGODB_ATLAS_URI:', process.env.MONGODB_ATLAS_URI);
 });
