@@ -85,7 +85,7 @@ const Home: React.FC = () => {
   const [athleteName, setAthleteName] = useState<string>('');
   const [bodyPart, setBodyPart] = useState<'左手' | '右手' | '左脚' | '右脚'>('左手');
   const [showSettings, setShowSettings] = useState<boolean>(false);
-  const [scale, setScale] = useState<number>(1);
+  const [scale, setScale] = useState<number>(0.5);
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
   const [showNonHighlightedPoints, setShowNonHighlightedPoints] = useState<boolean>(true);
 
@@ -397,7 +397,6 @@ const Home: React.FC = () => {
                     whiteSpace: 'nowrap',
                     zIndex: 4
                   }}>
-                    {point.label}
                     {isHighlighted && (
                       <>
                         <br />
@@ -450,7 +449,7 @@ const Home: React.FC = () => {
             id="scale-slider"
             type="range"
             min="0.1"
-            max="2"
+            max="1"
             step="0.1"
             value={scale}
             onChange={handleScaleChange}
@@ -468,33 +467,35 @@ const Home: React.FC = () => {
       <div className="flex flex-grow overflow-hidden">
         {/* 中间岩壁显示区 */}
         <div className="flex-grow overflow-auto">
-          <div
-            className="relative"
-            style={{
-              width: `${wallDimensions.width}px`,
-              height: `${wallDimensions.height}px`,
-              transform: `scale(${scale})`,
-              transformOrigin: 'top left'
-            }}
-          >
-            <ClimbingWall widthmm={wallDimensions.width} heightmm={wallDimensions.height} />
-            <RockWallPoints
-              widthmm={wallDimensions.width}
-              heightmm={wallDimensions.height}
-              marginTop={0}
-              marginBottom={wallDimensions.marginBottom}
-              marginLeft={wallDimensions.marginLeft}
-              marginRight={0}
-              pointSpacing={wallDimensions.pointSpacing}
-              horizontalBlankAfter={wallDimensions.horizontalBlankAfter}
-              verticalBlankAfter={wallDimensions.verticalBlankAfter}
-              horizontalBlankLength={wallDimensions.horizontalBlankLength}
-              verticalBlankLength={wallDimensions.verticalBlankLength}
-              highlightedLabels={highlightedLabels}
-              onPointClick={handlePointClick}
-              pointTimes={pointTimes}
-              showNonHighlightedPoints={showNonHighlightedPoints}
-            />
+          <div className="flex justify-center">
+            <div
+              className="relative"
+              style={{
+                width: `${wallDimensions.width}px`,
+                height: `${wallDimensions.height}px`,
+                transform: `scale(${scale})`,
+                transformOrigin: 'top center'
+              }}
+            >
+              <ClimbingWall widthmm={wallDimensions.width} heightmm={wallDimensions.height} />
+              <RockWallPoints
+                widthmm={wallDimensions.width}
+                heightmm={wallDimensions.height}
+                marginTop={0}
+                marginBottom={wallDimensions.marginBottom}
+                marginLeft={wallDimensions.marginLeft}
+                marginRight={0}
+                pointSpacing={wallDimensions.pointSpacing}
+                horizontalBlankAfter={wallDimensions.horizontalBlankAfter}
+                verticalBlankAfter={wallDimensions.verticalBlankAfter}
+                horizontalBlankLength={wallDimensions.horizontalBlankLength}
+                verticalBlankLength={wallDimensions.verticalBlankLength}
+                highlightedLabels={highlightedLabels}
+                onPointClick={handlePointClick}
+                pointTimes={pointTimes}
+                showNonHighlightedPoints={showNonHighlightedPoints}
+              />
+            </div>
           </div>
         </div>
 
