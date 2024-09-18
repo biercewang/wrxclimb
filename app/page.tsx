@@ -278,7 +278,7 @@ const Home: React.FC = () => {
   const handleDeleteRecord = async (id: string, athleteName: string, timeInSeconds: number) => {
     // 添加更详细的确认对话框
     if (!confirm(`确定要删除这条记录吗？\n运动员: ${athleteName}\n时间: ${timeInSeconds}秒\nID: ${id}`)) {
-      return; // 如果用户取消，则不执行��除操作
+      return; // 如果用户取消，不执行除��作
     }
 
     try {
@@ -391,27 +391,34 @@ const Home: React.FC = () => {
         }
       }
 
-      const getPointShape = (point: HighlightedPoint) => {
+      const getPointShape = (point: HighlightedPoint, isSelected: boolean) => {
+        const fillColor = point.type === '终点' ? 'red' : point.type === '手点' ? 'blue' : 'green';
+        const fill = isSelected ? fillColor : 'none';
+        const stroke = fillColor;
+        const strokeWidth = 4; // 增加线条宽度以适应更大的尺寸
+
         switch (point.type) {
           case '终点':
             return (
-              <svg viewBox="0 0 51 48" width="100%" height="100%">
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
                 <path
-                  fill="red"
-                  d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                  d="M50,3 L61,37 H97 L68,59 L79,95 L50,75 L21,95 L32,59 L3,37 H39 Z"
+                  fill={fill}
+                  stroke={stroke}
+                  strokeWidth={strokeWidth}
                 />
               </svg>
             );
           case '手点':
             return (
-              <svg viewBox="0 0 40 40" width="100%" height="100%">
-                <circle cx="20" cy="20" r="20" fill="blue" />
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <circle cx="50" cy="50" r="45" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
               </svg>
             );
           case '脚点':
             return (
-              <svg viewBox="0 0 40 40" width="100%" height="100%">
-                <rect width="40" height="40" fill="green" />
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <rect x="5" y="5" width="90" height="90" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
               </svg>
             );
         }
@@ -425,8 +432,8 @@ const Home: React.FC = () => {
             if (!isHighlighted && !showNonHighlightedPoints) {
               return null; // 如果是非高亮点且设置为不显示，则不渲染
             }
-            const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
-            const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
+            const size = isHighlighted ? '100px' : '10px'; // 将高亮点的尺寸增加到 100px
+            const offset = isHighlighted ? 50 : 5; // 调整偏移量以保持居中
             const pointTime = pointTimes.find(time => time.pointLabel === point.label);
             const isSelected = selectedPoint === point.label;
 
@@ -451,11 +458,11 @@ const Home: React.FC = () => {
                 onMouseEnter={() => setHoveredPoint(point.label)}
                 onMouseLeave={() => setHoveredPoint(null)}
               >
-                {isHighlighted ? getPointShape(highlightedPoint) : (
+                {isHighlighted ? getPointShape(highlightedPoint, isSelected) : (
                   <div style={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: 'black',
+                    border: '2px solid black',
                     borderRadius: '50%',
                   }}></div>
                 )}
@@ -782,10 +789,10 @@ const Home: React.FC = () => {
 
             {selectedPoint && (
               <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}</h3>
+                <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}({highlightedLabels.find(hl => hl.label === selectedPoint)?.type})</h3>
                 {/* 显选中点的时间记录 */}
                 <div className="mt-4">
-                  <h4 className="font-semibold mb-2">之前的时间 ({wallDimensions.walltype}赛道):</h4>
+                  <h4 className="font-semibold mb-2">时间记录:</h4>
                   <ul className="space-y-2">
                     {pointTimes
                       .filter(time => time.pointLabel === selectedPoint && time.walltype === wallDimensions.walltype)
