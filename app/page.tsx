@@ -257,7 +257,7 @@ const Home: React.FC = () => {
         walltype: wallDimensions.walltype
       });
 
-      // 添加这行来显示实际提交的 body
+      // 添加��行来显示实际提交的 body
       console.log("提交的 body:", body);
 
       const response = await fetch('/api/climbing-records', {
@@ -389,7 +389,7 @@ const Home: React.FC = () => {
           if (columnCounter % horizontalBlankAfter === 0) {
             x += horizontalBlankLength;
             side = side === 'L' ? 'R' : 'L'; // 在空白后切换侧面
-            currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移���到右侧时重置部分计数器
+            currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移到右侧时重置部分计数器
           }
         }
 
@@ -518,6 +518,10 @@ const Home: React.FC = () => {
       setWallDimensions(adultWallDimensions);
       setHighlightedLabels(adultHighlightedLabels);
     }
+    // 清空选中的岩点编号和相关状态
+    setSelectedPoint(null);
+    setPointTimes([]);
+    setTouchTime('');
   };
 
   const handleWallDimensionsChange = (newDimensions: Partial<WallDimensions>) => {
@@ -532,41 +536,43 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-gray-200 text-center p-4">
+      <header className="bg-blue-400 text-white text-center p-4">
         <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          <div className="flex items-center mb-2 sm:mb-0">
-            <span className="mr-2">赛道类型：</span>
-            {['儿童', '成人'].map((type) => (
-              <button
-                key={type}
-                onClick={() => switchWallType(type as '儿童' | '成人')}
-                className={`px-3 py-1 rounded mr-2 ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center mb-2 sm:mb-0">
-            <label htmlFor="scale-slider" className="mr-2">岩壁缩放：</label>
-            <input
-              id="scale-slider"
-              type="range"
-              min="0.1"
-              max="1"
-              step="0.1"
-              value={scale}
-              onChange={handleScaleChange}
-              className="w-32"
-            />
-            <span className="ml-2">{scale.toFixed(1)}x</span>
-          </div>
-        </div>
       </header>
       <div className="flex flex-grow overflow-hidden">
         {/* 岩壁显示区 */}
-        <div className="flex-grow overflow-auto min-w-0">
-          <div className="flex justify-center">
+        <div className="flex-grow overflow-auto min-w-0 flex flex-col">
+          {/* 控制面板 */}
+          <div className="bg-gray-200 p-4 flex justify-center items-center space-x-4 shadow-md">
+            <div className="flex items-center">
+              <span className="mr-2 font-semibold">赛道类型：</span>
+              {['儿童', '成人'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => switchWallType(type as '儿童' | '成人')}
+                  className={`px-3 py-1 rounded mr-2 ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center">
+              <label htmlFor="scale-slider" className="mr-2 font-semibold">岩壁缩放：</label>
+              <input
+                id="scale-slider"
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.1"
+                value={scale}
+                onChange={handleScaleChange}
+                className="w-32"
+              />
+              <span className="ml-2 font-semibold">{scale.toFixed(1)}x</span>
+            </div>
+          </div>
+          {/* 岩壁 */}
+          <div className="flex justify-center flex-grow bg-gray-100">
             <div
               className="relative"
               style={{
@@ -599,7 +605,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* 右侧区域 */}
-        <div className="w-full sm:w-1/3 bg-gray-100 flex flex-col overflow-hidden" style={{ minWidth: '300px' }}>
+        <div className="w-full sm:w-1/3 bg-gray-50 flex flex-col overflow-hidden border-l border-gray-300" style={{ minWidth: '300px' }}>
           {/* 设置区和时间记录区共享同一个容器 */}
           <div className="flex-grow overflow-y-auto">
             {/* 设置区 */}
@@ -824,10 +830,10 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-      <footer className="bg-gray-200 p-2 flex justify-between items-center">
+      <footer className="bg-blue-400 text-white p-2 flex justify-between items-center">
         <span>© 2024 攀岩墙模拟器。保留所有权利。</span>
         <button
-          className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+          className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700"
           onClick={toggleSettings}
         >
           {showSettings ? "隐藏设置" : "修改岩壁参数"}
