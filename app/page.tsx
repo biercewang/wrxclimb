@@ -130,7 +130,7 @@ const Home: React.FC = () => {
     { label: "L5M6", type: '脚点' },
     { label: "R5C3", type: '手点' },
     { label: "L5H1", type: '脚点' },
-    { label: "R5E1", type: '手点' },
+    { label: "R5E1", type: '脚点' },
     { label: "R4A10", type: '终点' },
     { label: "L4M8", type: '脚点' },
     { label: "L4L5", type: '手点' },
@@ -278,7 +278,7 @@ const Home: React.FC = () => {
   const handleDeleteRecord = async (id: string, athleteName: string, timeInSeconds: number) => {
     // 添加更详细的确认对话框
     if (!confirm(`确定要删除这条记录吗？\n运动员: ${athleteName}\n时间: ${timeInSeconds}秒\nID: ${id}`)) {
-      return; // 如果用户取消，不执行除作
+      return; // 如果用户取消，不执行除
     }
 
     try {
@@ -511,33 +511,46 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="bg-gray-200 text-center p-4 flex justify-between items-center">
-        <h1>欢迎使用攀岩时间记录器</h1>
-        <div className="flex items-center">
-          <span className="mr-4">当前赛道：{wallDimensions.walltype}</span>
-          <label htmlFor="scale-slider" className="mr-2">岩壁缩放：</label>
-          <input
-            id="scale-slider"
-            type="range"
-            min="0.1"
-            max="1"
-            step="0.1"
-            value={scale}
-            onChange={handleScaleChange}
-            className="w-32"
-          />
-          <span className="ml-2">{scale.toFixed(1)}x</span>
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-gray-200 text-center p-4">
+        <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <div className="flex items-center mb-2 sm:mb-0">
+            <span className="mr-2">赛道类型：</span>
+            {['儿童', '成人'].map((type) => (
+              <button
+                key={type}
+                onClick={() => switchWallType(type as '儿童' | '成人')}
+                className={`px-3 py-1 rounded mr-2 ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center mb-2 sm:mb-0">
+            <label htmlFor="scale-slider" className="mr-2">岩壁缩放：</label>
+            <input
+              id="scale-slider"
+              type="range"
+              min="0.1"
+              max="1"
+              step="0.1"
+              value={scale}
+              onChange={handleScaleChange}
+              className="w-32"
+            />
+            <span className="ml-2">{scale.toFixed(1)}x</span>
+          </div>
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={toggleSettings}
+          >
+            {showSettings ? "隐藏设置" : "修改岩壁参数"}
+          </button>
         </div>
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={toggleSettings}
-        >
-          {showSettings ? "隐藏设置" : "修改岩壁参数"}
-        </button>
       </header>
-      <div className="flex flex-grow overflow-hidden">
-        {/* 中间岩壁显示区 */}
+      <div className="flex flex-col sm:flex-row flex-grow overflow-hidden">
+        {/* 岩壁显示区 */}
         <div className="flex-grow overflow-auto">
           <div className="flex justify-center">
             <div
@@ -571,10 +584,10 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* 右侧区域 - 增加宽度 */}
-        <div className="w-1/3 bg-gray-100 overflow-hidden relative">
+        {/* 右侧区域 - 在小屏幕上变为底部区域 */}
+        <div className="w-full sm:w-1/3 bg-gray-100 overflow-hidden relative">
           {/* 设置区 */}
-          <div className={`absolute top-0 left-0 w-full h-full bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className={`absolute inset-0 bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
             <div className="space-y-2">
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
