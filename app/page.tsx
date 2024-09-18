@@ -278,7 +278,7 @@ const Home: React.FC = () => {
   const handleDeleteRecord = async (id: string, athleteName: string, timeInSeconds: number) => {
     // 添加更详细的确认对话框
     if (!confirm(`确定要删除这条记录吗？\n运动员: ${athleteName}\n时间: ${timeInSeconds}秒\nID: ${id}`)) {
-      return; // 如果用户取消，不执行除��作
+      return; // 如果用户取消，不执行除作
     }
 
     try {
@@ -466,7 +466,7 @@ const Home: React.FC = () => {
                     borderRadius: '50%',
                   }}></div>
                 )}
-                {pointTime && (
+                {hoveredPoint === point.label && isHighlighted && (
                   <div style={{
                     position: 'absolute',
                     top: '100%',
@@ -474,40 +474,13 @@ const Home: React.FC = () => {
                     transform: 'translateX(-50%)',
                     backgroundColor: 'rgba(0,0,0,0.7)',
                     color: 'white',
-                    padding: '2px 4px',
-                    borderRadius: '4px',
-                    fontSize: '10px',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {pointTime.athleteName} - {pointTime.bodyPart} - {pointTime.timeInSeconds}秒
-                  </div>
-                )}
-                {hoveredPoint === point.label && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    color: 'white',
-                    padding: '2px 4px',
-                    borderRadius: '4px',
-                    fontSize: '10px',
+                    padding: '8px 16px', // 增加内边距
+                    borderRadius: '8px', // 增加圆角
+                    fontSize: '28px', // 将字体大小从 14px 增加到 28px
                     whiteSpace: 'nowrap',
-                    zIndex: 4
+                    zIndex: 10
                   }}>
-                    {isHighlighted && (
-                      <>
-                        <br />
-                        {pointTimes
-                          .filter(time => time.pointLabel === point.label)
-                          .map((time, index) => (
-                            <div key={index}>
-                              {time.athleteName} - {time.bodyPart} - {time.timeInSeconds}秒
-                            </div>
-                          ))}
-                      </>
-                    )}
+                    {point.label} - {highlightedPoint.type}
                   </div>
                 )}
               </div>
