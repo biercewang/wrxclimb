@@ -395,10 +395,16 @@ const Home: React.FC = () => {
         const fillColor = point.type === '终点' ? 'red' : point.type === '手点' ? 'blue' : 'green';
         const fill = isSelected ? fillColor : 'none';
         const stroke = fillColor;
-        const strokeWidth = 4; // 增加线条宽度以适应更大的尺寸
+        const strokeWidth = 4;
 
         switch (point.type) {
           case '终点':
+            return (
+              <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <rect x="5" y="5" width="90" height="90" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
+              </svg>
+            );
+          case '手点':
             return (
               <svg viewBox="0 0 100 100" width="100%" height="100%">
                 <path
@@ -409,16 +415,10 @@ const Home: React.FC = () => {
                 />
               </svg>
             );
-          case '手点':
-            return (
-              <svg viewBox="0 0 100 100" width="100%" height="100%">
-                <circle cx="50" cy="50" r="45" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
-              </svg>
-            );
           case '脚点':
             return (
               <svg viewBox="0 0 100 100" width="100%" height="100%">
-                <rect x="5" y="5" width="90" height="90" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
+                <circle cx="50" cy="50" r="45" fill={fill} stroke={stroke} strokeWidth={strokeWidth} />
               </svg>
             );
         }
