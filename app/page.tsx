@@ -188,20 +188,36 @@ const Home: React.FC = () => {
   };
 
   const handlePointClick = async (label: string) => {
-    setSelectedPoint(label);
-    setTouchTime('');
-    try {
-      const response = await fetch(`/api/climbing-records/${label}`);
-      if (response.ok) {
-        const times = await response.json();
-        // 对时间记录进行排序，从短到长
-        const sortedTimes = times.sort((a: PointTime, b: PointTime) => a.timeInSeconds - b.timeInSeconds);
-        setPointTimes(sortedTimes);
-      } else {
-        throw new Error('获取时间记录失败');
+    if (selectedPoint === label) {
+      // 如果已经选中，直接获取时间记录
+      try {
+        const response = await fetch(`/api/climbing-records/${label}`);
+        if (response.ok) {
+          const times = await response.json();
+          const sortedTimes = times.sort((a: PointTime, b: PointTime) => a.timeInSeconds - b.timeInSeconds);
+          setPointTimes(sortedTimes);
+        } else {
+          throw new Error('获取时间记录失败');
+        }
+      } catch (error) {
+        console.error("获取点位时间记录时出错:", error);
       }
-    } catch (error) {
-      console.error("获取点位时间记录时出错:", error);
+    } else {
+      // 如果是新选中的点，更新选中状态并获取时间记录
+      setSelectedPoint(label);
+      setTouchTime('');
+      try {
+        const response = await fetch(`/api/climbing-records/${label}`);
+        if (response.ok) {
+          const times = await response.json();
+          const sortedTimes = times.sort((a: PointTime, b: PointTime) => a.timeInSeconds - b.timeInSeconds);
+          setPointTimes(sortedTimes);
+        } else {
+          throw new Error('获取时间记录失败');
+        }
+      } catch (error) {
+        console.error("获取点位时间记录时出错:", error);
+      }
     }
   };
 
@@ -455,6 +471,10 @@ const Home: React.FC = () => {
                   zIndex: isHighlighted ? 2 : 1, // 确保高亮点在其他点之上
                 }}
                 onClick={() => isHighlighted && onPointClick(point.label)}
+                onTouchStart={(e) => {
+                  e.preventDefault(); // 防止默认的触摸行为
+                  isHighlighted && onPointClick(point.label);
+                }}
                 onMouseEnter={() => setHoveredPoint(point.label)}
                 onMouseLeave={() => setHoveredPoint(null)}
               >
