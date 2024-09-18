@@ -321,6 +321,7 @@ const Home: React.FC = () => {
             const size = isHighlighted ? '50px' : '10px'; // 增大高亮点的尺寸
             const offset = isHighlighted ? 15 : 5; // 调整偏移量以保持居中
             const pointTime = pointTimes.find(time => time.pointLabel === point.label);
+            const isSelected = selectedPoint === point.label;
 
             return (
               <div
@@ -347,16 +348,23 @@ const Home: React.FC = () => {
               >
                 {isHighlighted && (
                   <>
-                    <div
+                    <svg
+                      viewBox="0 0 51 48"
+                      width={size}
+                      height={size}
                       style={{
                         position: 'absolute',
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'red',
-                        clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+                        top: '0',
+                        left: '0',
                       }}
-                    />
-                    <span style={{ position: 'relative', zIndex: 3 }}>{point.label}</span>
+                    >
+                      <path
+                        fill={isSelected ? 'red' : 'none'}
+                        stroke="red"
+                        strokeWidth="2"
+                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                      />
+                    </svg>
                   </>
                 )}
                 {pointTime && (
