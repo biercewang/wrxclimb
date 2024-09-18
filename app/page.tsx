@@ -551,7 +551,7 @@ const Home: React.FC = () => {
       </header>
       <div className="flex flex-grow overflow-hidden">
         {/* 岩壁显示区 */}
-        <div className="flex-grow overflow-auto">
+        <div className="flex-grow overflow-auto min-w-0">
           <div className="flex justify-center">
             <div
               className="relative"
@@ -585,7 +585,7 @@ const Home: React.FC = () => {
         </div>
 
         {/* 右侧区域 */}
-        <div className="w-full sm:w-1/3 bg-gray-100 flex flex-col overflow-hidden">
+        <div className="w-full sm:w-1/3 bg-gray-100 flex flex-col overflow-hidden" style={{ minWidth: '300px' }}>
           {/* 设置区和时间记录区共享同一个容器 */}
           <div className="flex-grow overflow-y-auto">
             {/* 设置区 */}
