@@ -511,7 +511,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <header className="bg-gray-200 text-center p-4">
         <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
         <div className="flex flex-col sm:flex-row justify-between items-center">
@@ -549,7 +549,7 @@ const Home: React.FC = () => {
           </button>
         </div>
       </header>
-      <div className="flex flex-col sm:flex-row flex-grow overflow-hidden">
+      <div className="flex flex-grow overflow-hidden">
         {/* 岩壁显示区 */}
         <div className="flex-grow overflow-auto">
           <div className="flex justify-center">
@@ -584,225 +584,228 @@ const Home: React.FC = () => {
           </div>
         </div>
 
-        {/* 右侧区域 - 在小屏幕上变为底部区域 */}
-        <div className="w-full sm:w-1/3 bg-gray-100 overflow-hidden relative">
-          {/* 设置区 */}
-          <div className={`absolute inset-0 bg-gray-100 p-4 overflow-y-auto transition-transform duration-300 ease-in-out ${showSettings ? 'translate-x-0' : 'translate-x-full'}`}>
-            <div className="space-y-2">
+        {/* 右侧区域 */}
+        <div className="w-full sm:w-1/3 bg-gray-100 flex flex-col overflow-hidden">
+          {/* 设置区和时间记录区共享同一个容器 */}
+          <div className="flex-grow overflow-y-auto">
+            {/* 设置区 */}
+            <div className={`${showSettings ? 'block' : 'hidden'} p-4`}>
+              <div className="space-y-2">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
+                  <div className="mt-2 flex justify-left">
+                    {['儿童', '成人'].map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => switchWallType(type as '儿童' | '成人')}
+                        className={`px-3 py-1 rounded ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                          }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="show-non-highlighted"
+                    checked={showNonHighlightedPoints}
+                    onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
+                    className="mr-2"
+                  />
+                  <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">显示/隐藏岩孔</label>
+                </div>
+                <label className="block">
+                  自定义岩壁参数：
+                </label>
+
+                {/* 其他设置选项 */}
+                <label className="block">
+                  岩壁宽度 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.width}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ width: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  岩壁高度 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.height}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ height: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  底部边距 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.marginBottom}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ marginBottom: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  左侧边距 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.marginLeft}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ marginLeft: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  点间距 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.pointSpacing}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ pointSpacing: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  水平空白后 (点):
+                  <input
+                    type="number"
+                    value={wallDimensions.horizontalBlankAfter}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ horizontalBlankAfter: parseInt(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  垂直空白后 (点):
+                  <input
+                    type="number"
+                    value={wallDimensions.verticalBlankAfter}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ verticalBlankAfter: parseInt(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  水平空白长度 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.horizontalBlankLength}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ horizontalBlankLength: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <label className="block">
+                  垂直空白长度 (mm):
+                  <input
+                    type="number"
+                    value={wallDimensions.verticalBlankLength}
+                    className="mt-1 p-1 border rounded"
+                    onChange={e => handleWallDimensionsChange({ verticalBlankLength: parseFloat(e.target.value) })}
+                  />
+                </label>
+                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
+                  生成岩壁
+                </button>
+                <label className="block">
+                  <input
+                    type="text"
+                    value={labelsInput}
+                    onChange={handleLabelsChange}
+                    placeholder="输入格式：标签:类型; 例如 R8A10:终点; R8B1:手点; R7E9:脚点"
+                    className="border p-1 rounded w-full"
+                  />
+                </label>
+                <label className="block">
+                  <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
+                    应用高亮
+                  </button>
+                </label>
+
+                {/* 添加显示/隐藏非高亮点的勾选框 */}
+
+              </div>
+            </div>
+
+            {/* 时间记录区 */}
+            <div className={`${showSettings ? 'hidden' : 'block'} p-4`}>
+              {/* 运动员姓名输入 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
-                <div className="mt-2 flex justify-left">
-                  {['儿童', '成人'].map((type) => (
+                <label className="block text-sm font-medium text-gray-700">运动员姓名</label>
+                <input
+                  type="text"
+                  value={athleteName}
+                  onChange={handleAthleteNameChange}
+                  placeholder="输入运动员姓名"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
+
+              {/* 时间填列区域 - 始终显示 */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">触摸时间 (秒)</label>
+                <input
+                  type="text"
+                  value={touchTime}
+                  onChange={handleTimeChange}
+                  placeholder="输入时间 (秒)"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">使用部位</label>
+                <div className="mt-2 flex justify-between">
+                  {['左手', '右手', '左脚', '右脚'].map((part) => (
                     <button
-                      key={type}
-                      onClick={() => switchWallType(type as '儿童' | '成人')}
-                      className={`px-3 py-1 rounded ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      key={part}
+                      onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
+                      className={`px-3 py-1 rounded ${bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                         }`}
                     >
-                      {type}
+                      {part}
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="show-non-highlighted"
-                  checked={showNonHighlightedPoints}
-                  onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
-                  className="mr-2"
-                />
-                <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">显示/隐藏岩孔</label>
-              </div>
-              <label className="block">
-                自定义岩壁参数：
-              </label>
 
-              {/* 其他设置选项 */}
-              <label className="block">
-                岩壁宽度 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.width}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ width: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                岩壁高度 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.height}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ height: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                底部边距 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.marginBottom}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ marginBottom: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                左侧边距 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.marginLeft}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ marginLeft: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                点间距 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.pointSpacing}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ pointSpacing: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                水平空白后 (点):
-                <input
-                  type="number"
-                  value={wallDimensions.horizontalBlankAfter}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ horizontalBlankAfter: parseInt(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                垂直空白后 (点):
-                <input
-                  type="number"
-                  value={wallDimensions.verticalBlankAfter}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ verticalBlankAfter: parseInt(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                水平空白长度 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.horizontalBlankLength}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ horizontalBlankLength: parseFloat(e.target.value) })}
-                />
-              </label>
-              <label className="block">
-                垂直空白长度 (mm):
-                <input
-                  type="number"
-                  value={wallDimensions.verticalBlankLength}
-                  className="mt-1 p-1 border rounded"
-                  onChange={e => handleWallDimensionsChange({ verticalBlankLength: parseFloat(e.target.value) })}
-                />
-              </label>
-              <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
-                生成岩壁
+              <button
+                className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                onClick={handleTimeSubmit}
+                disabled={!selectedPoint || !athleteName.trim() || !touchTime.trim()}
+              >
+                提交
               </button>
-              <label className="block">
-                <input
-                  type="text"
-                  value={labelsInput}
-                  onChange={handleLabelsChange}
-                  placeholder="输入格式：标签:类型; 例如 R8A10:终点; R8B1:手点; R7E9:脚点"
-                  className="border p-1 rounded w-full"
-                />
-              </label>
-              <label className="block">
-                <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
-                  应用高亮
-                </button>
-              </label>
 
-              {/* 添加显示/隐藏非高亮点的勾选框 */}
-
-            </div>
-          </div>
-
-          {/* 时间记录区 */}
-          <div className={`p-4 overflow-y-auto h-full ${showSettings ? 'hidden' : 'block'}`}>
-            {/* 运动员姓名输入 */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">运动员姓名</label>
-              <input
-                type="text"
-                value={athleteName}
-                onChange={handleAthleteNameChange}
-                placeholder="输入运动员姓名"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-
-            {/* 时间填列区域 - 始终显示 */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">触摸时间 (秒)</label>
-              <input
-                type="text"
-                value={touchTime}
-                onChange={handleTimeChange}
-                placeholder="输入时间 (秒)"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">使用部位</label>
-              <div className="mt-2 flex justify-between">
-                {['左手', '右手', '左脚', '右脚'].map((part) => (
-                  <button
-                    key={part}
-                    onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
-                    className={`px-3 py-1 rounded ${bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
-                      }`}
-                  >
-                    {part}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <button
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              onClick={handleTimeSubmit}
-              disabled={!selectedPoint || !athleteName.trim() || !touchTime.trim()}
-            >
-              提交
-            </button>
-
-            {selectedPoint && (
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}({highlightedLabels.find(hl => hl.label === selectedPoint)?.type})</h3>
-                {/* 显选中点的时间记录 */}
+              {selectedPoint && (
                 <div className="mt-4">
-                  <h4 className="font-semibold mb-2">时间记录:</h4>
-                  <ul className="space-y-2">
-                    {pointTimes
-                      .filter(time => time.pointLabel === selectedPoint && time.walltype === wallDimensions.walltype)
-                      .map((time, index) => (
-                        <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
-                          <div>
-                            <div><strong>运动员:</strong> {time.athleteName}</div>
-                            <div><strong>使用部位:</strong> {time.bodyPart}</div>
-                            <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
-                            <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
-                            {/* <div><strong>墙面类型:</strong> {time.walltype}</div> */}
-                          </div>
-                          <button
-                            onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                          >
-                            删除
-                          </button>
-                        </li>
-                      ))}
-                  </ul>
+                  <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}({highlightedLabels.find(hl => hl.label === selectedPoint)?.type})</h3>
+                  {/* 显选中点的时间记录 */}
+                  <div className="mt-4">
+                    <h4 className="font-semibold mb-2">时间记录:</h4>
+                    <ul className="space-y-2">
+                      {pointTimes
+                        .filter(time => time.pointLabel === selectedPoint && time.walltype === wallDimensions.walltype)
+                        .map((time, index) => (
+                          <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
+                            <div>
+                              <div><strong>运动员:</strong> {time.athleteName}</div>
+                              <div><strong>使用部位:</strong> {time.bodyPart}</div>
+                              <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
+                              <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
+                              {/* <div><strong>墙面类型:</strong> {time.walltype}</div> */}
+                            </div>
+                            <button
+                              onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
+                              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                            >
+                              删除
+                            </button>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
