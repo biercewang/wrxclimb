@@ -789,16 +789,17 @@ const Home: React.FC = () => {
                             <div>
                               <div><strong>运动员:</strong> {time.athleteName}</div>
                               <div><strong>使用部位:</strong> {time.bodyPart}</div>
-                              <div><strong>时间:</strong> {time.timeInSeconds} 秒</div>
+                              <div className="flex items-center">
+                                <strong>时间:</strong> {time.timeInSeconds} 秒
+                                <button
+                                  onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
+                                  className="ml-2 px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                                >
+                                  删除
+                                </button>
+                              </div>
                               <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
-                              {/* <div><strong>墙面类型:</strong> {time.walltype}</div> */}
                             </div>
-                            <button
-                              onClick={() => handleDeleteRecord(time._id, time.athleteName, time.timeInSeconds)}
-                              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                            >
-                              删除
-                            </button>
                           </li>
                         ))}
                     </ul>
