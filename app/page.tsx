@@ -32,6 +32,11 @@ interface WallDimensions {
   walltype: '儿童' | '成人';
 }
 
+interface HighlightedPoint {
+  label: string;
+  type: '终点' | '手点' | '脚点';
+}
+
 const Home: React.FC = () => {
   const [childWallDimensions, setChildWallDimensions] = useState<WallDimensions>({
     width: 3000,
@@ -61,24 +66,96 @@ const Home: React.FC = () => {
 
   const [wallDimensions, setWallDimensions] = useState<WallDimensions>(childWallDimensions);
 
-  const [childHighlightedLabels, setChildHighlightedLabels] = useState<string[]>([
-    "R8B1", "R8E5", "R7E9", "R7A6", "R7D5", "R7G1", "R6E9", "R6H6",
-    "R6B5", "R6A1", "R6E1", "R5A8", "R5C6", "L5I5", "L5L1", "R5A1",
-    "L4H8", "R4C8", "R4C6", "L4M4", "R4G2", "R3C10", "R3E7", "R3E5",
-    "R3A2", "L2I10", "R2D9", "L2M5", "L2I1", "L1M9", "L1H8", "L1H5", "L1M2", "R8A10"
+  const [childHighlightedLabels, setChildHighlightedLabels] = useState<HighlightedPoint[]>([
+    { label: "R8A10", type: '终点' },
+    { label: "R8B1", type: '手点' },
+    { label: "R8E5", type: '脚点' },
+    { label: "R7E9", type: '脚点' },
+    { label: "R7A6", type: '手点' },
+    { label: "R7D5", type: '脚点' },
+    { label: "R7G1", type: '手点' },
+    { label: "R6E9", type: '脚点' },
+    { label: "R6H6", type: '手点' },
+    { label: "R6B5", type: '脚点' },
+    { label: "R6A1", type: '手点' },
+    { label: "R6E1", type: '脚点' },
+    { label: "R5A8", type: '手点' },
+    { label: "R5C6", type: '脚点' },
+    { label: "L5I5", type: '手点' },
+    { label: "L5L1", type: '脚点' },
+    { label: "R5A1", type: '手点' },
+    { label: "L4H8", type: '脚点' },
+    { label: "R4C8", type: '手点' },
+    { label: "R4C6", type: '脚点' },
+    { label: "L4M4", type: '手点' },
+    { label: "R4G2", type: '脚点' },
+    { label: "R3C10", type: '手点' },
+    { label: "R3E7", type: '脚点' },
+    { label: "R3E5", type: '手点' },
+    { label: "R3A2", type: '脚点' },
+    { label: "L2I10", type: '手点' },
+    { label: "R2D9", type: '脚点' },
+    { label: "L2M5", type: '手点' },
+    { label: "L2I1", type: '脚点' },
+    { label: "L1M9", type: '手点' },
+    { label: "L1H8", type: '脚点' },
+    { label: "L1H5", type: '手点' },
+    { label: "L1M2", type: '脚点' }
   ]);
 
-  const [adultHighlightedLabels, setAdultHighlightedLabels] = useState<string[]>([
-    "R10A10", "R10D3", "L9M10", "L9M7", "R9E7", "R9A2", "R8A10", "L8C8", "R8A5", "L8I3", "R8E1", "L8L1", "R7B10", "L7G9", "L7M4", "L7M1", "L6F9", "L6L7", "R6D4",
-    "R6B3", "L6H2", "R5E9", "L5E7", "L5M6", "R5C3", "L5H1", "R5E1",
-    "R4A10", "L4M8", "L4L5", "R4B2", "L3M10", "L3M7", "R3C6", "L3G4", "L3G1", "R2A9",
-    "L2F8", "R2B6", "L2G3", "R2G3", "R2F1", "R1A10", "R1H9", "R1F9", "R1F4",
+  const [adultHighlightedLabels, setAdultHighlightedLabels] = useState<HighlightedPoint[]>([
+    { label: "R10A10", type: '终点' },
+    { label: "R10D3", type: '手点' },
+    { label: "L9M10", type: '脚点' },
+    { label: "L9M7", type: '手点' },
+    { label: "R9E7", type: '脚点' },
+    { label: "R9A2", type: '手点' },
+    { label: "R8A10", type: '终点' },
+    { label: "L8C8", type: '脚点' },
+    { label: "R8A5", type: '手点' },
+    { label: "L8I3", type: '脚点' },
+    { label: "R8E1", type: '手点' },
+    { label: "L8L1", type: '脚点' },
+    { label: "R7B10", type: '终点' },
+    { label: "L7G9", type: '脚点' },
+    { label: "L7M4", type: '手点' },
+    { label: "L7M1", type: '脚点' },
+    { label: "L6F9", type: '手点' },
+    { label: "L6L7", type: '脚点' },
+    { label: "R6D4", type: '手点' },
+    { label: "R6B3", type: '脚点' },
+    { label: "L6H2", type: '手点' },
+    { label: "R5E9", type: '脚点' },
+    { label: "L5E7", type: '手点' },
+    { label: "L5M6", type: '脚点' },
+    { label: "R5C3", type: '手点' },
+    { label: "L5H1", type: '脚点' },
+    { label: "R5E1", type: '手点' },
+    { label: "R4A10", type: '终点' },
+    { label: "L4M8", type: '脚点' },
+    { label: "L4L5", type: '手点' },
+    { label: "R4B2", type: '脚点' },
+    { label: "L3M10", type: '手点' },
+    { label: "L3M7", type: '脚点' },
+    { label: "R3C6", type: '手点' },
+    { label: "L3G4", type: '脚点' },
+    { label: "L3G1", type: '手点' },
+    { label: "R2A9", type: '脚点' },
+    { label: "L2F8", type: '手点' },
+    { label: "R2B6", type: '脚点' },
+    { label: "L2G3", type: '手点' },
+    { label: "R2G3", type: '脚点' },
+    { label: "R2F1", type: '手点' },
+    { label: "R1A10", type: '终点' },
+    { label: "R1H9", type: '脚点' },
+    { label: "R1F9", type: '手点' },
+    { label: "R1F4", type: '脚点' },
   ]);
 
-  const [highlightedLabels, setHighlightedLabels] = useState<string[]>(childHighlightedLabels);
+  const [highlightedLabels, setHighlightedLabels] = useState<HighlightedPoint[]>(childHighlightedLabels);
 
   const [showWall, setShowWall] = useState<boolean>(false);
-  const [labelsInput, setLabelsInput] = useState<string>(highlightedLabels.join('; '));
+  const [labelsInput, setLabelsInput] = useState<string>(highlightedLabels.map(point => `${point.label}:${point.type}`).join('; '));
   const [selectedPoint, setSelectedPoint] = useState<string | null>(null);
   const [touchTime, setTouchTime] = useState<string>('');
   const [pointTimes, setPointTimes] = useState<PointTime[]>([]);
@@ -98,7 +175,10 @@ const Home: React.FC = () => {
   };
 
   const handleApplyLabels = () => {
-    const labelsArray = labelsInput.split(';').map(label => label.trim()).filter(label => label !== '');
+    const labelsArray = labelsInput.split(';').map(label => {
+      const [labelText, type] = label.trim().split(':');
+      return { label: labelText, type: type as '终点' | '手点' | '脚点' };
+    }).filter(label => label.label !== '' && label.type);
     setHighlightedLabels(labelsArray);
     if (wallDimensions.walltype === '儿童') {
       setChildHighlightedLabels(labelsArray);
@@ -138,7 +218,7 @@ const Home: React.FC = () => {
   };
 
   const handleTimeSubmit = async () => {
-    // 验证运动员姓名和时间不为空
+    // 验证运动员姓名时间不为空
     if (!athleteName.trim()) {
       alert('请输入运动员姓名');
       return;
@@ -198,7 +278,7 @@ const Home: React.FC = () => {
   const handleDeleteRecord = async (id: string, athleteName: string, timeInSeconds: number) => {
     // 添加更详细的确认对话框
     if (!confirm(`确定要删除这条记录吗？\n运动员: ${athleteName}\n时间: ${timeInSeconds}秒\nID: ${id}`)) {
-      return; // 如果用户取消，则不执行删除操作
+      return; // 如果用户取消，则不执行��除操作
     }
 
     try {
@@ -247,7 +327,7 @@ const Home: React.FC = () => {
     verticalBlankAfter: number;
     horizontalBlankLength: number;
     verticalBlankLength: number;
-    highlightedLabels: string[];
+    highlightedLabels: HighlightedPoint[];
     onPointClick: (label: string) => void;
     pointTimes: PointTime[];
     showNonHighlightedPoints: boolean;
@@ -311,10 +391,37 @@ const Home: React.FC = () => {
         }
       }
 
+      const getPointShape = (point: HighlightedPoint) => {
+        switch (point.type) {
+          case '终点':
+            return (
+              <svg viewBox="0 0 51 48" width="100%" height="100%">
+                <path
+                  fill="red"
+                  d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                />
+              </svg>
+            );
+          case '手点':
+            return (
+              <svg viewBox="0 0 40 40" width="100%" height="100%">
+                <circle cx="20" cy="20" r="20" fill="blue" />
+              </svg>
+            );
+          case '脚点':
+            return (
+              <svg viewBox="0 0 40 40" width="100%" height="100%">
+                <rect width="40" height="40" fill="green" />
+              </svg>
+            );
+        }
+      };
+
       return (
         <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', height: '100%' }}>
           {points.map((point, index) => {
-            const isHighlighted = highlightedLabels.includes(point.label);
+            const highlightedPoint = highlightedLabels.find(hl => hl.label === point.label);
+            const isHighlighted = !!highlightedPoint;
             if (!isHighlighted && !showNonHighlightedPoints) {
               return null; // 如果是非高亮点且设置为不显示，则不渲染
             }
@@ -332,8 +439,6 @@ const Home: React.FC = () => {
                   bottom: `${point.y - offset}px`,
                   width: size,
                   height: size,
-                  backgroundColor: isHighlighted ? 'transparent' : 'black',
-                  borderRadius: isHighlighted ? '0' : '50%', // 非高亮点设置为圆形
                   cursor: isHighlighted ? 'pointer' : 'default',
                   display: 'flex',
                   justifyContent: 'center',
@@ -346,26 +451,13 @@ const Home: React.FC = () => {
                 onMouseEnter={() => setHoveredPoint(point.label)}
                 onMouseLeave={() => setHoveredPoint(null)}
               >
-                {isHighlighted && (
-                  <>
-                    <svg
-                      viewBox="0 0 51 48"
-                      width={size}
-                      height={size}
-                      style={{
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
-                      }}
-                    >
-                      <path
-                        fill={isSelected ? 'red' : 'none'}
-                        stroke="red"
-                        strokeWidth="2"
-                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
-                      />
-                    </svg>
-                  </>
+                {isHighlighted ? getPointShape(highlightedPoint) : (
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'black',
+                    borderRadius: '50%',
+                  }}></div>
                 )}
                 {pointTime && (
                   <div style={{
@@ -619,7 +711,13 @@ const Home: React.FC = () => {
                 生成岩壁
               </button>
               <label className="block">
-                <input type="text" value={labelsInput} onChange={handleLabelsChange} placeholder="高亮标签" className="border p-1 rounded" />
+                <input
+                  type="text"
+                  value={labelsInput}
+                  onChange={handleLabelsChange}
+                  placeholder="输入格式：标签:类型; 例如 R8A10:终点; R8B1:手点; R7E9:脚点"
+                  className="border p-1 rounded w-full"
+                />
               </label>
               <label className="block">
                 <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleApplyLabels}>
