@@ -11,6 +11,7 @@ interface PointTime {
   bodyPart: '左手' | '右手' | '左脚' | '右脚';
   walltype: '儿童' | '成人';
   _id: string;
+  recordDate?: string; // Added recordDate property
 }
 
 // 在组件外部定义一个格式化日期的函数
@@ -165,6 +166,7 @@ const Home: React.FC = () => {
   const [scale, setScale] = useState<number>(0.5);
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
   const [showNonHighlightedPoints, setShowNonHighlightedPoints] = useState<boolean>(true);
+  const [recordDate, setRecordDate] = useState<string>(new Date().toISOString().split('T')[0]);
 
   const handleGenerateWall = () => {
     setShowWall(true);
@@ -233,6 +235,10 @@ const Home: React.FC = () => {
     setBodyPart(selectedPart);
   };
 
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRecordDate(event.target.value);
+  };
+
   const handleTimeSubmit = async () => {
     // 验证运动员姓名时间不为空
     if (!athleteName.trim()) {
@@ -254,10 +260,10 @@ const Home: React.FC = () => {
         timeInSeconds: parseFloat(touchTime),
         athleteName,
         bodyPart,
-        walltype: wallDimensions.walltype
+        walltype: wallDimensions.walltype,
+        recordDate: recordDate // Added recordDate
       });
 
-      // 添加��行来显示实际提交的 body
       console.log("提交的 body:", body);
 
       const response = await fetch('/api/climbing-records', {
@@ -536,7 +542,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-blue-400 text-white text-center p-4">
+      <header className="bg-blue-600 text-white text-center p-4">
         <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
       </header>
       <div className="flex flex-grow overflow-hidden">
@@ -759,6 +765,17 @@ const Home: React.FC = () => {
                 />
               </div>
 
+              {/* 添加日期输入 */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">记录日期</label>
+                <input
+                  type="date"
+                  value={recordDate}
+                  onChange={handleDateChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </div>
+
               {/* 时间填列区域 - 始终显示 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">触摸时间 (秒)</label>
@@ -818,7 +835,7 @@ const Home: React.FC = () => {
                                   删除
                                 </button>
                               </div>
-                              <div><strong>记录日期:</strong> {formatDate(time.timestamp)}</div>
+                              <div><strong>记录日期:</strong> {formatDate(time.recordDate || time.timestamp)}</div>
                             </div>
                           </li>
                         ))}
@@ -830,7 +847,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-      <footer className="bg-blue-400 text-white p-2 flex justify-between items-center">
+      <footer className="bg-blue-800 text-white p-2 flex justify-between items-center">
         <span>© 2024 攀岩墙模拟器。保留所有权利。</span>
         <button
           className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700"
