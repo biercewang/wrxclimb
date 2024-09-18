@@ -389,7 +389,7 @@ const Home: React.FC = () => {
           if (columnCounter % horizontalBlankAfter === 0) {
             x += horizontalBlankLength;
             side = side === 'L' ? 'R' : 'L'; // 在空白后切换侧面
-            currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移动到右侧时重置部分计数器
+            currentHorizontalSection = side === 'R' ? 1 : currentHorizontalSection + 1; // 移���到右侧时重置部分计数器
           }
         }
 
@@ -561,12 +561,6 @@ const Home: React.FC = () => {
             />
             <span className="ml-2">{scale.toFixed(1)}x</span>
           </div>
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={toggleSettings}
-          >
-            {showSettings ? "隐藏设置" : "修改岩壁参数"}
-          </button>
         </div>
       </header>
       <div className="flex flex-grow overflow-hidden">
@@ -830,8 +824,14 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-      <footer className="bg-gray-200 text-center p-2">
-        © 2024 攀岩墙模拟器。保留所有权利。
+      <footer className="bg-gray-200 p-2 flex justify-between items-center">
+        <span>© 2024 攀岩墙模拟器。保留所有权利。</span>
+        <button
+          className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+          onClick={toggleSettings}
+        >
+          {showSettings ? "隐藏设置" : "修改岩壁参数"}
+        </button>
       </footer>
     </div>
   );
