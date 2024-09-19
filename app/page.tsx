@@ -542,9 +542,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="bg-blue-600 text-white text-center p-4">
+      {/* <header className="bg-blue-600 text-white text-center p-4">
         <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
-      </header>
+      </header> */}
       <div className="flex flex-grow overflow-hidden">
         {/* 岩壁显示区 */}
         <div className="flex-grow overflow-auto min-w-0 flex flex-col">
