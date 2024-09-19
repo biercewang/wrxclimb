@@ -541,22 +541,23 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* <header className="bg-blue-600 text-white text-center p-4">
-        <h1 className="text-xl font-bold mb-2">欢迎使用攀岩时间记录器</h1>
-      </header> */}
+    <div className="flex flex-col h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <div className="flex flex-grow overflow-hidden">
         {/* 岩壁显示区 */}
         <div className="flex-grow overflow-auto min-w-0 flex flex-col">
           {/* 控制面板 */}
-          <div className="bg-gray-200 p-4 flex justify-center items-center space-x-4 shadow-md">
+          <div className="bg-gray-200 dark:bg-gray-800 p-4 flex justify-center items-center space-x-4 shadow-md">
             <div className="flex items-center">
               <span className="mr-2 font-semibold">赛道类型：</span>
               {['儿童', '成人'].map((type) => (
                 <button
                   key={type}
                   onClick={() => switchWallType(type as '儿童' | '成人')}
-                  className={`px-3 py-1 rounded mr-2 ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-white text-black'}`}
+                  className={`px-3 py-1 rounded mr-2 ${
+                    wallDimensions.walltype === type 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-white text-black dark:bg-gray-700 dark:text-white'
+                  }`}
                 >
                   {type}
                 </button>
@@ -578,7 +579,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           {/* 岩壁 */}
-          <div className="flex justify-center flex-grow bg-gray-100">
+          <div className="flex justify-center flex-grow bg-gray-100 dark:bg-gray-800">
             <div
               className="relative"
               style={{
@@ -611,20 +612,20 @@ const Home: React.FC = () => {
         </div>
 
         {/* 右侧区域 */}
-        <div className="w-full sm:w-1/3 bg-gray-50 flex flex-col overflow-hidden border-l border-gray-300" style={{ minWidth: '300px' }}>
+        <div className="w-full sm:w-1/3 bg-gray-50 dark:bg-gray-800 flex flex-col overflow-hidden border-l border-gray-300 dark:border-gray-700" style={{ minWidth: '300px' }}>
           {/* 设置区和时间记录区共享同一个容器 */}
           <div className="flex-grow overflow-y-auto">
             {/* 设置区 */}
             <div className={`${showSettings ? 'block' : 'hidden'} p-4`}>
               <div className="space-y-2">
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">赛道类型:</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">赛道类型:</label>
                   <div className="mt-2 flex justify-left">
                     {['儿童', '成人'].map((type) => (
                       <button
                         key={type}
                         onClick={() => switchWallType(type as '儿童' | '成人')}
-                        className={`px-3 py-1 rounded ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                        className={`px-3 py-1 rounded ${wallDimensions.walltype === type ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white'
                           }`}
                       >
                         {type}
@@ -640,104 +641,104 @@ const Home: React.FC = () => {
                     onChange={(e) => setShowNonHighlightedPoints(e.target.checked)}
                     className="mr-2"
                   />
-                  <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700">显示/隐藏岩孔</label>
+                  <label htmlFor="show-non-highlighted" className="text-sm font-medium text-gray-700 dark:text-gray-300">显示/隐藏岩孔</label>
                 </div>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   自定义岩壁参数：
                 </label>
 
                 {/* 其他设置选项 */}
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   岩壁宽度 (mm):
                   <input
                     type="number"
                     value={wallDimensions.width}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ width: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   岩壁高度 (mm):
                   <input
                     type="number"
                     value={wallDimensions.height}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ height: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   底部边距 (mm):
                   <input
                     type="number"
                     value={wallDimensions.marginBottom}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ marginBottom: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   左侧边距 (mm):
                   <input
                     type="number"
                     value={wallDimensions.marginLeft}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ marginLeft: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   点间距 (mm):
                   <input
                     type="number"
                     value={wallDimensions.pointSpacing}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ pointSpacing: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   水平空白后 (点):
                   <input
                     type="number"
                     value={wallDimensions.horizontalBlankAfter}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ horizontalBlankAfter: parseInt(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   垂直空白后 (点):
                   <input
                     type="number"
                     value={wallDimensions.verticalBlankAfter}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ verticalBlankAfter: parseInt(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   水平空白长度 (mm):
                   <input
                     type="number"
                     value={wallDimensions.horizontalBlankLength}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ horizontalBlankLength: parseFloat(e.target.value) })}
                   />
                 </label>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   垂直空白长度 (mm):
                   <input
                     type="number"
                     value={wallDimensions.verticalBlankLength}
-                    className="mt-1 p-1 border rounded"
+                    className="mt-1 p-1 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                     onChange={e => handleWallDimensionsChange({ verticalBlankLength: parseFloat(e.target.value) })}
                   />
                 </label>
                 <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleGenerateWall}>
                   生成岩壁
                 </button>
-                <label className="block">
+                <label className="block text-gray-700 dark:text-gray-300">
                   <input
                     type="text"
                     value={labelsInput}
                     onChange={handleLabelsChange}
                     placeholder="输入格式：标签:类型; 例如 R8A10:终点; R8B1:手点; R7E9:脚点"
-                    className="border p-1 rounded w-full"
+                    className="border p-1 rounded w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
                 </label>
                 <label className="block">
@@ -755,47 +756,47 @@ const Home: React.FC = () => {
             <div className={`${showSettings ? 'hidden' : 'block'} p-4`}>
               {/* 运动员姓名输入 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">运动员姓名</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">运动员姓名</label>
                 <input
                   type="text"
                   value={athleteName}
                   onChange={handleAthleteNameChange}
                   placeholder="输入运动员姓名"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               {/* 添加日期输入 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">记录日期</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">记录日期</label>
                 <input
                   type="date"
                   value={recordDate}
                   onChange={handleDateChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               {/* 时间填列区域 - 始终显示 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">触摸时间 (秒)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">触摸时间 (秒)</label>
                 <input
                   type="text"
                   value={touchTime}
                   onChange={handleTimeChange}
                   placeholder="输入时间 (秒)"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">使用部位</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">使用部位</label>
                 <div className="mt-2 flex justify-between">
                   {['左手', '右手', '左脚', '右脚'].map((part) => (
                     <button
                       key={part}
                       onClick={() => handleBodyPartChange(part as '左手' | '右手' | '左脚' | '右脚')}
-                      className={`px-3 py-1 rounded ${bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                      className={`px-3 py-1 rounded ${bodyPart === part ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white'
                         }`}
                     >
                       {part}
@@ -814,16 +815,16 @@ const Home: React.FC = () => {
 
               {selectedPoint && (
                 <div className="mt-4">
-                  <h3 className="text-lg font-semibold mb-2">岩点编号: {selectedPoint}({highlightedLabels.find(hl => hl.label === selectedPoint)?.type})</h3>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">岩点编号: {selectedPoint}({highlightedLabels.find(hl => hl.label === selectedPoint)?.type})</h3>
                   {/* 显选中点的时间记录 */}
                   <div className="mt-4">
-                    <h4 className="font-semibold mb-2">时间记录:</h4>
+                    <h4 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">时间记录:</h4>
                     <ul className="space-y-2">
                       {pointTimes
                         .filter(time => time.pointLabel === selectedPoint && time.walltype === wallDimensions.walltype)
                         .map((time, index) => (
-                          <li key={index} className="p-2 bg-gray-100 rounded flex justify-between items-center">
-                            <div>
+                          <li key={index} className="p-2 bg-gray-100 dark:bg-gray-800 rounded flex justify-between items-center">
+                            <div className="text-gray-900 dark:text-gray-100">
                               <div><strong>运动员:</strong> {time.athleteName}</div>
                               <div><strong>使用部位:</strong> {time.bodyPart}</div>
                               <div className="flex items-center">
@@ -848,7 +849,7 @@ const Home: React.FC = () => {
         </div>
       </div>
       <footer className="bg-blue-800 text-white p-2 flex justify-between items-center">
-        <span>© 2024 攀岩墙模拟器。保留所有权利。</span>
+        <span className="text-gray-100">© 2024 攀岩墙模拟器。保留所有权利。</span>
         <button
           className="px-2 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-700"
           onClick={toggleSettings}
